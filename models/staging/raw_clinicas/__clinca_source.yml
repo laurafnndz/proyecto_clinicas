@@ -1,0 +1,160 @@
+version: 2
+
+sources:
+  - name: raw_clinicas
+    description: Tablas de schema raw en db bronze
+    database: lfr_bronze
+    schema: raw_clinicas
+    loaded_at_field: fecha_consulta    # campo para medir la frescura de los datos
+    freshness:                         # controla la frescura de los datos
+      warn_after:
+        count: 2                       # si los datos no se actualizan en 2 días lanza un warning
+        period: day
+      error_after:
+        count: 3                       # si los datos no se actualizan en 3 dias lanza un error
+        period: day
+    tags:                              # etiquetas para organizar y filtrar (con dbt run --select tag:bronze, se ejecuta sólo los modelos con estas tag)
+      - bronze
+      - clinicas
+    config:
+      enabled: true
+
+    tables:
+
+
+    tables:
+      - name: consultas
+        columns:
+          - name: id_consulta
+            data_type: varchar
+            data_tests: #test de id_consulta. Única y not null.
+              - unique
+              - not_null
+
+          - name: fecha_consulta
+            data_type: varchar
+          - name: nombre_mascota
+            data_type: varchar
+          - name: especie
+            data_type: varchar
+          - name: numero_chip
+            data_type: varchar
+          - name: raza
+            data_type: varchar
+          - name: peso_gr
+            data_type: varchar
+          - name: fecha_nacimiento
+            data_type: varchar
+          - name: esterilizado
+            data_type: varchar
+          - name: vacuna_pendiente
+            data_type: varchar
+          - name: motivo_consulta
+            data_type: varchar
+          - name: dni_dueno
+            data_type: varchar
+          - name: veterinario
+            data_type: varchar
+          - name: numero_colegiado
+            data_type: varchar
+          - name: medicamentos
+            data_type: varchar
+          - name: pruebas
+            data_type: varchar
+          - name: resultado_prueba
+            data_type: varchar
+          - name: id_factura
+            data_type: varchar
+          - name: fecha_emision
+            data_type: varchar
+          - name: total
+            data_type: varchar
+          - name: metodo_pago
+            data_type: varchar
+          - name: nombre_centro
+            data_type: varchar
+          - name: direccion_centro
+            data_type: varchar
+          - name: cp_centro
+            data_type: varchar
+          - name: telefono_centro
+            data_type: varchar
+          - name: ciudad_centro
+            data_type: varchar
+
+
+
+      - name: duenos
+        columns:
+          - name: nombre_dueno
+            data_type: varchar
+          - name: dni_dueno
+            data_type: varchar
+            data_tests: #test de dni dueño. Única y not null.
+              - unique
+              - not_null
+          - name: fecha_nacimiento
+            data_type: varchar
+          - name: telefono_dueno
+            data_type: varchar
+          - name: email_dueno
+            data_type: varchar
+          - name: direccion
+            data_type: varchar
+          - name: municipio
+            data_type: varchar
+          - name: codigo_postal
+            data_type: varchar
+
+
+
+      - name: empleados
+        columns:
+          - name: id_empleado
+            data_type: varchar
+            data_tests: #test de id_empleado. Única y not null.
+              - unique
+              - not_null
+          - name: nombre_completo
+            data_type: varchar
+          - name: dni
+            data_type: varchar
+            data_tests: #test de dni empleado. Única y not null.
+              - unique
+              - not_null
+          - name: fecha_nacimiento
+            data_type: varchar
+          - name: fecha_alta
+            data_type: varchar
+          - name: salario
+            data_type: varchar
+          - name: puesto
+            data_type: varchar
+          - name: numero_colegiado
+            data_type: varchar
+          - name: nombre_centro
+            data_type: varchar
+
+
+
+      - name: hospitalizaciones
+        columns:
+          - name: id_hospitalizacion
+            data_type: varchar
+            data_tests: #test de id_hospitalizacion. Única y not null.
+              - unique
+              - not_null
+          - name: id_consulta
+            data_type: varchar
+            data_tests: #test de id_consulta. Not null.
+              - not_null
+          - name: nombre_mascota
+            data_type: varchar
+          - name: dni_dueno
+            data_type: varchar
+          - name: telefono_dueno
+            data_type: varchar
+          - name: fecha_ingreso
+            data_type: varchar
+          - name: fecha_alta
+            data_type: varchar

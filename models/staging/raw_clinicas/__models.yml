@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: stg_raw_clinicas__consultas
+    description: Vista de staging sobre la tabla cruda de consultas veterinarias
+    columns:
+      - name: esterilizado
+        description: Indica si la mascota esta esterilizada
+        data_tests:
+          - accepted_values:
+              values: ['si', 'no', 'no aplica']
+      - name: resultado_prueba
+        description: Resultado de la prueba diagnostica
+        data_tests:
+          - accepted_values:
+              values: ['normal', 'alterado', 'null']
+      - name: metodo_pago
+        description: Metodo de pago utilizado
+        data_tests:
+          - accepted_values:
+              values: ['efectivo', 'tarjeta', 'transferencia', 'bizum', 'null']
