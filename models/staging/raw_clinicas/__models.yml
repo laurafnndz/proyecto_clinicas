@@ -1,6 +1,8 @@
 version: 2
 
 models:
+
+
   - name: stg_raw_clinicas__consultas
     description: Vista de staging sobre la tabla cruda de consultas veterinarias
     columns:

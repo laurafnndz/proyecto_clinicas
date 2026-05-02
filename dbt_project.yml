@@ -21,7 +21,7 @@ models:
 
     staging:
       +materialized: view
-      +schema: raw_clinicas
-      +database: lfr_bronze
+      +schema: staging
+      +database: lfr_silver
       +tags:
         - staging
