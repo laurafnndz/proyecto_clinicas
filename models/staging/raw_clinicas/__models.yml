@@ -1,23 +1,124 @@
 version: 2
 
 models:
-
-
   - name: stg_raw_clinicas__consultas
     description: Vista de staging sobre la tabla cruda de consultas veterinarias
     columns:
+      - name: id_consulta
+        description: Identificador unico de la consulta
+      - name: fecha_consulta
+        description: Fecha en la que se realizo la consulta
+      - name: nombre_mascota
+        description: Nombre de la mascota atendida
+      - name: especie
+        description: Especie de la mascota
+      - name: numero_chip
+        description: Numero de chip de la mascota, null si no tiene
+      - name: raza
+        description: Raza de la mascota
+      - name: peso_gr
+        description: Peso de la mascota en gramos
+      - name: fecha_nacimiento
+        description: Fecha de nacimiento de la mascota
       - name: esterilizado
         description: Indica si la mascota esta esterilizada
-        data_tests:
-          - accepted_values:
-              values: ['si', 'no', 'no aplica']
+      - name: vacuna_pendiente
+        description: Vacunas pendientes separadas por pipe, null si no hay ninguna
+      - name: motivo_consulta
+        description: Motivo de la consulta
+      - name: dni_dueno
+        description: DNI del dueno de la mascota
+      - name: veterinario
+        description: Nombre completo del veterinario
+      - name: numero_colegiado
+        description: Numero de colegiado del veterinario
+      - name: medicamentos
+        description: Medicamentos prescritos separados por pipe
+      - name: pruebas
+        description: Prueba diagnostica realizada
       - name: resultado_prueba
-        description: Resultado de la prueba diagnostica
-        data_tests:
-          - accepted_values:
-              values: ['normal', 'alterado', 'null']
+        description: Resultado de la prueba
+      - name: id_factura
+        description: Identificador de la factura
+      - name: fecha_emision
+        description: Fecha de emision de la factura
+      - name: total
+        description: Importe total de la factura en euros
       - name: metodo_pago
         description: Metodo de pago utilizado
-        data_tests:
-          - accepted_values:
-              values: ['efectivo', 'tarjeta', 'transferencia', 'bizum', 'null']
+      - name: nombre_centro
+        description: Nombre de la clinica veterinaria
+      - name: direccion_centro
+        description: Direccion de la clinica veterinaria
+      - name: cp_centro
+        description: Codigo postal de la clinica veterinaria
+      - name: telefono_centro
+        description: Telefono de la clinica veterinaria
+      - name: ciudad_centro
+        description: Ciudad de la clinica veterinaria
+
+  - name: stg_raw_clinicas__duenos
+    description: Vista de staging sobre la tabla cruda de duenos
+    columns:
+      - name: nombre_dueno
+        description: Nombre completo del dueno
+      - name: dni_dueno
+        description: DNI del dueno, identificador natural unico
+      - name: fecha_nacimiento
+        description: Fecha de nacimiento del dueno
+      - name: telefono_dueno
+        description: Telefono de contacto del dueno
+      - name: email_dueno
+        description: Email de contacto del dueno
+      - name: direccion
+        description: Direccion del domicilio del dueno
+      - name: municipio
+        description: Municipio donde vive el dueno
+      - name: codigo_postal
+        description: Codigo postal del domicilio del dueno
+      - name: provincia
+        description: Provincia donde vive el dueno
+      - name: comunidad_autonoma
+        description: Comunidad autonoma donde vive el dueno
+      - name: pais
+        description: Pais donde vive el dueno
+
+  - name: stg_raw_clinicas__empleados
+    description: Vista de staging sobre la tabla cruda de empleados
+    columns:
+      - name: id_empleado
+        description: Identificador unico del empleado
+      - name: nombre_completo
+        description: Nombre completo del empleado
+      - name: dni
+        description: DNI del empleado
+      - name: fecha_nacimiento
+        description: Fecha de nacimiento del empleado
+      - name: fecha_alta
+        description: Fecha de alta del empleado en la clinica
+      - name: salario
+        description: Salario mensual del empleado en euros
+      - name: puesto
+        description: Puesto que ocupa el empleado en la clinica
+      - name: numero_colegiado
+        description: Numero de colegiado del veterinario, null si no es veterinario
+      - name: nombre_centro
+        description: Nombre de la clinica donde trabaja el empleado
+
+  - name: stg_raw_clinicas__hospitalizaciones
+    description: Vista de staging sobre la tabla cruda de hospitalizaciones
+    columns:
+      - name: id_hospitalizacion
+        description: Identificador unico de la hospitalizacion
+      - name: id_consulta
+        description: Identificador de la consulta que genero la hospitalizacion
+      - name: nombre_mascota
+        description: Nombre de la mascota hospitalizada
+      - name: dni_dueno
+        description: DNI del dueno de la mascota hospitalizada
+      - name: telefono_dueno
+        description: Telefono del dueno de la mascota hospitalizada
+      - name: fecha_ingreso
+        description: Fecha de ingreso en la clinica
+      - name: fecha_alta
+        description: Fecha de alta de la hospitalizacion

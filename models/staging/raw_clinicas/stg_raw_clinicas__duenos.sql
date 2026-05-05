@@ -16,7 +16,10 @@ renamed as (
         email_dueno,
         direccion,
         municipio,
-        codigo_postal
+        codigo_postal,
+        provincia,
+        comunidad_autonoma,
+        pais
 
     from source
 

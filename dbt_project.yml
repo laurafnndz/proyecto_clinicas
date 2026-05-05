@@ -25,3 +25,10 @@ models:
       +database: lfr_silver
       +tags:
         - staging
+
+    silver:
+      +materialized: table     
+      +schema: silver
+      +database: lfr_silver
+      +tags:
+        - silver
