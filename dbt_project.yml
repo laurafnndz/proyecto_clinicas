@@ -32,3 +32,6 @@ models:
       +database: lfr_silver
       +tags:
         - silver
+
+vars:
+  surrogate_key_treat_nulls_as_empty_strings: true #En vez de fallar la creación de la llave surrogada, trae el null como una cadena vacía.

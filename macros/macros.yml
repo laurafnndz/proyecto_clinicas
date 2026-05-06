@@ -1,0 +1,20 @@
+version: 2
+
+macros:
+  - name: generate_surrogate_key
+    description: >
+      Genera una surrogate key única a partir de una o varias columnas
+      usando dbt_utils.generate_surrogate_key. Maneja NULLs automáticamente.
+    arguments:
+      - name: columns
+        type: list
+        description: "Lista de columnas que forman la clave. Ejemplo: ['order_id'] o ['order_id', 'product_id']"
+
+  - name: clean_string
+    description: >
+      Limpia una columna de texto aplicando trim() para eliminar espacios
+      al inicio y al final, y lower() para convertir a minúsculas.
+    arguments:
+      - name: column
+        type: string
+        description: "Nombre de la columna a limpiar. Ejemplo: 'email', 'first_name'"

@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: stg_ciudad
+    description: "Catálogo de ciudades únicas de los dueños"
+    columns:
+      - name: id_ciudad
+        data_tests:
+        - unique        # cada ciudad es única
+        - not_null
+      - name: ciudad
+      - name: provincia
+        data_tests:
+        - not_null
+      - name: pais
+        data_tests:
+        - not_null
+       
+      - name: codigo_postal
+        data_tests:
+        - not_null
