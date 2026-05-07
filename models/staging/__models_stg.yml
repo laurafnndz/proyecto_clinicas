@@ -1,21 +1,122 @@
 version: 2
-
 models:
   - name: stg__ciudad
     description: "Catálogo de ciudades únicas de los dueños"
     columns:
       - name: id_ciudad
         data_tests:
-        - unique        # cada ciudad es única
-        - not_null
+          - unique
+          - not_null
       - name: ciudad
       - name: provincia
         data_tests:
-        - not_null
+          - not_null
       - name: pais
         data_tests:
-        - not_null
-       
+          - not_null
       - name: codigo_postal
         data_tests:
-        - not_null
+          - not_null
+
+  - name: stg__duenos
+    description: >
+      Staging de dueños de mascotas. Todas las columnas están tratadas para que
+      en caso de null, salga SIN DATO (excepto fecha nacimiento y edad)
+    columns:
+      - name: id_dueno
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre
+        data_tests:
+          - not_null
+      - name: primer_apellido
+        data_tests:
+          - not_null
+      - name: segundo_apellido
+      - name: dni
+        data_tests:
+          - not_null
+      - name: fecha_nacimiento
+      - name: edad
+        description: datediff de fecha nacimiento y fecha actual
+      - name: telefono
+      - name: email
+      - name: codigo_postal
+      - name: provincia
+      - name: comunidad_autonoma
+      - name: pais
+        data_tests:
+          - not_null
+      - name: id_ciudad
+        data_tests:
+          - not_null
+
+  - name: stg__especies
+    description: "Catálogo de especies de animales"
+    columns:
+      - name: id_especie
+        data_tests:
+          - unique
+          - not_null
+      - name: especie
+        data_tests:
+          - not_null
+
+
+
+  - name: stg__razas
+    description: "Catálogo de razas de animales"
+    columns:
+      - name: id_raza
+        data_tests:
+          - unique
+          - not_null
+      - name: raza
+        data_tests:
+          - not_null
+      - name: id_especie
+        data_tests:
+          - unique
+          - not_null
+
+
+  - name:  stg__puestos
+    description: "Catálogo de puestos de trabajo de los empleados"
+    columns:
+      - name: id_puesto
+        data_tests:
+          - unique
+          - not_null
+      - name: puesto
+        data_tests:
+          - not_null
+          
+
+
+          
+  - name: stg__mascotas
+    description: >
+      Staging de mascotas. El número de chip es NO PROCEDE para pájaros sin chip
+      y NO para el resto de animales sin chip.
+    columns:
+      - name: id_mascota
+        data_tests:
+          - unique
+          - not_null
+      - name: id_dueno
+        data_tests:
+          - not_null
+      - name: nombre_mascota
+        data_tests:
+          - not_null
+      - name: numero_chip
+        data_tests:
+          - not_null
+      - name: id_raza
+        data_tests:
+          - not_null
+      - name: peso_gr
+      - name: fecha_nacimiento
+      - name: edad
+      - name: esterilizado

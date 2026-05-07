@@ -1,23 +1,28 @@
-with 
+with
+
 source as (
     select * from {{ source('raw_clinicas', 'duenos') }}
 ),
+
 cleaned as (
     select distinct
-        {{ dbt_utils.generate_surrogate_key(['dni_dueno', 'nombre_dueno']) }}  AS id_dueno,
-        {{ clean_string('SPLIT_PART(nombre_dueno, \' \', 1)') }}               AS nombre,
-        {{ clean_string('SPLIT_PART(nombre_dueno, \' \', 2)') }}               AS primer_apellido,
-        {{ clean_string('SPLIT_PART(nombre_dueno, \' \', 3)') }}               AS segundo_apellido,
-        {{ clean_string('dni_dueno') }}                                         AS dni,
-        TRY_CAST(fecha_nacimiento AS DATE)                                      AS fecha_nacimiento,
-        {{ clean_string('telefono_dueno') }}                                    AS telefono,
-        {{ clean_string('email_dueno') }}                                       AS email,
-        {{ clean_string('codigo_postal') }}                                     AS codigo_postal,
-        {{ clean_string('provincia') }}                                         AS provincia,
-        {{ clean_string('comunidad_autonoma') }}                                AS comunidad_autonoma,
-        {{ clean_string('pais') }}                                              AS pais,
-        {{ dbt_utils.generate_surrogate_key(['ciudad', 'pais']) }}              AS id_ciudad
+        {{ generate_surrogate_key(['dni_dueno', 'fecha_nacimiento'])}}                      AS id_dueno,
+        {{ handle_null(clean_string('SPLIT_PART(nombre_dueno, \' \', 1)')) }}               AS nombre,
+        {{ handle_null(clean_string('SPLIT_PART(nombre_dueno, \' \', 2)')) }}               AS primer_apellido,
+        {{ handle_null(clean_string('SPLIT_PART(nombre_dueno, \' \', 3)')) }}               AS segundo_apellido,
+        {{ handle_null(clean_string('dni_dueno')) }}                                        AS dni,
+        {{ cast_date('fecha_nacimiento') }}                                                  AS fecha_nacimiento, --no aplico handle null porque es dato tipo fecha
+        DATEDIFF('year', TRY_CAST(fecha_nacimiento AS DATE), CURRENT_DATE())                AS edad, --calculo la edad con fecha nacimiento y fecha actual. no handle null
+        {{ handle_null(clean_string('telefono_dueno')) }}                                   AS telefono,
+        {{ handle_null(clean_string('email_dueno')) }}                                      AS email,
+        {{ handle_null(clean_string('codigo_postal')) }}                                    AS codigo_postal,
+        {{ handle_null(clean_string('provincia')) }}                                        AS provincia,
+        {{ handle_null(clean_string('comunidad_autonoma')) }}                               AS comunidad_autonoma,
+        {{ handle_null(clean_string('pais')) }}                                             AS pais,
+        {{ generate_surrogate_key(['ciudad', 'pais'])}}                                     AS id_ciudad
     from source
 )
 select * from cleaned
+
+--Limpieza de todos los campos y creación de sk para id ciudad (ya hecho en stg__ciudad) y para id_dueno
 
