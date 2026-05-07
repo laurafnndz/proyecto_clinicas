@@ -1,5 +1,7 @@
 {% macro clean_string(column) %}
 
-    lower(trim({{ column }}))
+    upper(trim({{ column }}))
 
 {% endmacro %}
+
+--Macro para quitar espacios y pasar todo a mayúsculas
