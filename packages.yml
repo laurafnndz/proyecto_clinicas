@@ -4,8 +4,4 @@ packages:
   - package: dbt-labs/codegen
     version: 0.13.1
   - package: calogica/dbt_expectations
-    version: 0.10.4  
-
-packages:
-  - package: dbt-labs/codegen
-    version: 0.12.1
+    version: 0.10.4

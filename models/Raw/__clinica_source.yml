@@ -1,9 +1,8 @@
 version: 2
-
 sources:
   - name: raw_clinicas
     description: Tablas de schema raw en db bronze
-    database: lfr_bronze
+    database: dev_clinicas_bronze
     schema: raw_clinicas
     config:
       enabled: true
@@ -17,8 +16,6 @@ sources:
         error_after:
           count: 3
           period: day
-    loaded_at_field: fecha_consulta
-
     tables:
       - name: consultas
         columns:
@@ -33,11 +30,12 @@ sources:
             description: "Especie de mascota, solo podran ser gato, conejo, perro o pajaro"
             data_tests:
               - accepted_values:
-                  values:
-                    - conejo
-                    - gato
-                    - perro
-                    - pajaro
+                  arguments:
+                    values:
+                      - conejo
+                      - gato
+                      - perro
+                      - pajaro
           - name: numero_chip
           - name: raza
           - name: peso_gr
@@ -58,17 +56,18 @@ sources:
             description: "Solo podra ser tarjeta, efectivo, transferencia o bizum"
             data_tests:
               - accepted_values:
-                  values:
-                    - efectivo
-                    - bizum
-                    - tarjeta
-                    - transferencia
+                  arguments:
+                    values:
+                      - efectivo
+                      - bizum
+                      - tarjeta
+                      - transferencia
           - name: nombre_centro
           - name: direccion_centro
           - name: cp_centro
           - name: telefono_centro
           - name: ciudad_centro
-
+          
       - name: duenos
         columns:
           - name: nombre_dueno
@@ -81,14 +80,13 @@ sources:
           - name: provincia
           - name: comunidad_autonoma
           - name: pais
-
       - name: empleados
         columns:
           - name: id_empleado
             description: Identificador unico de empleados
             data_tests:
-            - unique
-            - not_null
+              - unique
+              - not_null
           - name: nombre_completo
           - name: dni
           - name: fecha_nacimiento
@@ -97,7 +95,6 @@ sources:
           - name: puesto
           - name: numero_colegiado
           - name: nombre_centro
-
       - name: hospitalizaciones
         columns:
           - name: id_hospitalizacion
@@ -107,8 +104,8 @@ sources:
           - name: id_consulta
             description: Identificador de la consulta
             data_tests:
-            - unique
-            - not_null
+              - unique
+              - not_null
           - name: nombre_mascota
           - name: dni_dueno
           - name: telefono_dueno

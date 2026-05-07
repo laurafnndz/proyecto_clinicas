@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_ciudad
+  - name: stg__ciudad
     description: "Catálogo de ciudades únicas de los dueños"
     columns:
       - name: id_ciudad
