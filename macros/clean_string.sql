@@ -4,4 +4,4 @@
 
 {% endmacro %}
 
-#Macro para quitar espacios y pasar todo a mayúsculas
+--Macro para quitar espacios y pasar todo a mayúsculas
