@@ -120,3 +120,30 @@ models:
       - name: fecha_nacimiento
       - name: edad
       - name: esterilizado
+
+
+
+models:
+  - name: stg__centros
+    description: "Staging de centros veterinarios con surrogate key de ciudad"
+    columns:
+      - name: id_centro
+        description: "Surrogate key del centro veterinario"
+        tests:
+          - not_null
+          - unique
+      - name: nombre_centro
+        description: "Nombre del centro veterinario"
+        tests:
+          - not_null
+      - name: id_ciudad
+        description: "FK hacia stg__ciudad"
+        tests:
+          - not_null
+          - unique 
+      - name: direccion_centro
+        description: "Dirección del centro veterinario"
+      - name: cp_centro
+        description: "Código postal del centro veterinario"
+      - name: telefono_centro
+        description: "Teléfono del centro veterinario"
