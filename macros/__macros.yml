@@ -15,6 +15,7 @@ macros:
     description: >
       Limpia una columna de texto aplicando trim() para eliminar espacios
       al inicio y al final, y upper() para convertir a mayúsculas.
+      En caso de que haya NULL devuelve SIN DATO
     arguments:
       - name: column
         type: string

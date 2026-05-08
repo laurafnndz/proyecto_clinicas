@@ -188,3 +188,25 @@ models:
               arguments:
                 to: ref('stg__centro') # FK de stg__centro
                 field: id_centro
+
+  - name: stg__motivo_consulta
+    description: "Catálogo de motivos de consulta"
+    columns:
+      - name: id_motivo
+        data_tests:
+          - unique
+          - not_null
+      - name: motivo_consulta
+        data_tests:
+          - not_null
+
+  - name: stg__metodo_pago
+    description: "Catálogo de métodos de pago"
+    columns:
+      - name: id_metodo_pago
+        data_tests:
+          - unique
+          - not_null
+      - name: metodo_pago
+        data_tests:
+          - not_null
