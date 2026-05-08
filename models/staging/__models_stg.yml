@@ -155,3 +155,36 @@ models:
         description: "Código postal del centro veterinario"
       - name: telefono_centro
         description: "Teléfono del centro veterinario"
+
+  - name: stg__empleado
+    description: "Empleados de los centros veterinarios"
+    columns:
+      - name: id_empleado
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre
+      - name: primer_apellido
+      - name: segundo_apellido
+      - name: dni
+        data_tests:
+          - not_null
+      - name: fecha_alta
+        data_tests:
+          - not_null
+      - name: salario
+      - name: id_puesto
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__puesto') # FK de stg__puesto
+                field: id_puesto
+      - name: numero_colegiado
+      - name: id_centro
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__centro') # FK de stg__centro
+                field: id_centro
