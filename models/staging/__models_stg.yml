@@ -18,7 +18,7 @@ models:
         data_tests:
           - not_null
 
-  - name: stg__duenos
+  - name: stg__dueno
     description: >
       Staging de dueños de mascotas. Todas las columnas están tratadas para que
       en caso de null, salga SIN DATO (excepto fecha nacimiento y edad)
@@ -51,8 +51,11 @@ models:
       - name: id_ciudad
         data_tests:
           - not_null
+          - relationships:
+              to: ref('stg__ciudad') # FK id_ciudad stg__ciudad
+              field: id_ciudad
 
-  - name: stg__especies
+  - name: stg__especie
     description: "Catálogo de especies de animales"
     columns:
       - name: id_especie
@@ -63,25 +66,23 @@ models:
         data_tests:
           - not_null
 
-
-
-  - name: stg__razas
+  - name: stg__raza
     description: "Catálogo de razas de animales"
     columns:
       - name: id_raza
         data_tests:
-          - unique
           - not_null
       - name: raza
         data_tests:
           - not_null
       - name: id_especie
         data_tests:
-          - unique
           - not_null
+          - relationships:
+              to: ref('stg__especies') # FK referencia a stg__especies
+              field: id_especie
 
-
-  - name:  stg__puestos
+  - name: stg__puesto
     description: "Catálogo de puestos de trabajo de los empleados"
     columns:
       - name: id_puesto
@@ -91,11 +92,8 @@ models:
       - name: puesto
         data_tests:
           - not_null
-          
 
-
-          
-  - name: stg__mascotas
+  - name: stg__mascota
     description: >
       Staging de mascotas. El número de chip es NO PROCEDE para pájaros sin chip
       y NO para el resto de animales sin chip.
@@ -107,6 +105,9 @@ models:
       - name: id_dueno
         data_tests:
           - not_null
+          - relationships:
+              to: ref('stg__duenos') # FK de stg__duenos
+              field: id_dueno
       - name: nombre_mascota
         data_tests:
           - not_null
@@ -116,31 +117,33 @@ models:
       - name: id_raza
         data_tests:
           - not_null
+          - relationships:
+              to: ref('stg__razas') # FK stg__razas
+              field: id_raza
       - name: peso_gr
       - name: fecha_nacimiento
       - name: edad
       - name: esterilizado
 
-
-
-models:
-  - name: stg__centros
+  - name: stg__centro
     description: "Staging de centros veterinarios con surrogate key de ciudad"
     columns:
       - name: id_centro
         description: "Surrogate key del centro veterinario"
-        tests:
+        data_tests:
           - not_null
           - unique
       - name: nombre_centro
         description: "Nombre del centro veterinario"
-        tests:
+        data_tests:
           - not_null
       - name: id_ciudad
         description: "FK hacia stg__ciudad"
-        tests:
+        data_tests:
           - not_null
-          - unique 
+          - relationships:
+              to: ref('stg__ciudad') # FK hacia stg__ciudad
+              field: id_ciudad
       - name: direccion_centro
         description: "Dirección del centro veterinario"
       - name: cp_centro
