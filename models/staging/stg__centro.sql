@@ -9,7 +9,7 @@
 
     renamed as (
         select distinct
-            {{ dbt_utils.generate_surrogate_key(['cv.nombre_centro', 'cv.cp_centro']) }} as id_centro,
+           {{ generate_surrogate_key(['cv.nombre_centro']) }}  AS  id_centro,
             cv.nombre_centro,
             c.id_ciudad,
             cv.direccion_centro,

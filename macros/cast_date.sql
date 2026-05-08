@@ -2,8 +2,9 @@
 -- Macro para castear fechas
 
 {% macro cast_date(column) %}
-    TRY_CAST({{ column }} AS DATE)
+    TO_DATE({{ column }}, 'DD/MM/YYYY')
 {% endmacro %}
+
 
 --la llamamos así: 
 --  {{ cast_date('value') }} 

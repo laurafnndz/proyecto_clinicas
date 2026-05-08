@@ -52,8 +52,9 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('stg__ciudad') # FK id_ciudad stg__ciudad
-              field: id_ciudad
+              arguments:
+                to: ref('stg__ciudad') # FK id_ciudad stg__ciudad
+                field: id_ciudad
 
   - name: stg__especie
     description: "Catálogo de especies de animales"
@@ -79,8 +80,9 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('stg__especies') # FK referencia a stg__especies
-              field: id_especie
+              arguments:
+                to: ref('stg__especie') # FK referencia a stg__especie
+                field: id_especie
 
   - name: stg__puesto
     description: "Catálogo de puestos de trabajo de los empleados"
@@ -106,8 +108,9 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('stg__duenos') # FK de stg__duenos
-              field: id_dueno
+              arguments:
+                to: ref('stg__dueno') # FK de stg__dueno
+                field: id_dueno
       - name: nombre_mascota
         data_tests:
           - not_null
@@ -118,8 +121,9 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('stg__razas') # FK stg__razas
-              field: id_raza
+              arguments:
+                to: ref('stg__raza') # FK stg__raza
+                field: id_raza
       - name: peso_gr
       - name: fecha_nacimiento
       - name: edad
@@ -142,8 +146,9 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('stg__ciudad') # FK hacia stg__ciudad
-              field: id_ciudad
+              arguments:
+                to: ref('stg__ciudad') # FK hacia stg__ciudad
+                field: id_ciudad
       - name: direccion_centro
         description: "Dirección del centro veterinario"
       - name: cp_centro

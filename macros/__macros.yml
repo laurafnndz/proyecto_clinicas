@@ -26,6 +26,7 @@ macros:
     description: >
       Separa en diferentes columnas el nombre, primer apellido y segundo apellido
       que vienen de origen en una única columna. Se llama con {{ split_name('nombre_dueno') }}
+      Da los resultados en mayúsculas
     arguments:
       - name: column
         type: string

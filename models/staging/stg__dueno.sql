@@ -7,12 +7,10 @@ source as (
 cleaned as (
     select distinct
         {{ generate_surrogate_key(['dni_dueno', 'fecha_nacimiento'])}}                      AS id_dueno,
-        {{ handle_null(clean_string('SPLIT_PART(nombre_dueno, \' \', 1)')) }}               AS nombre,
-        {{ handle_null(clean_string('SPLIT_PART(nombre_dueno, \' \', 2)')) }}               AS primer_apellido,
-        {{ handle_null(clean_string('SPLIT_PART(nombre_dueno, \' \', 3)')) }}               AS segundo_apellido,
+        {{ split_name('nombre_dueno') }},
         {{ handle_null(clean_string('dni_dueno')) }}                                        AS dni,
-        {{ cast_date('fecha_nacimiento') }}                                                  AS fecha_nacimiento, --no aplico handle null porque es dato tipo fecha
-        DATEDIFF('year', TRY_CAST(fecha_nacimiento AS DATE), CURRENT_DATE())                AS edad, --calculo la edad con fecha nacimiento y fecha actual. no handle null
+        {{ cast_date('fecha_nacimiento') }}                                                 AS fecha_nacimiento, --no aplico handle null porque es dato tipo fecha
+        DATEDIFF('year', {{ cast_date('fecha_nacimiento') }}, CURRENT_DATE())               AS edad, --calculo la edad con fecha nacimiento y fecha actual. no handle null
         {{ handle_null(clean_string('telefono_dueno')) }}                                   AS telefono,
         {{ handle_null(clean_string('email_dueno')) }}                                      AS email,
         {{ handle_null(clean_string('codigo_postal')) }}                                    AS codigo_postal,
