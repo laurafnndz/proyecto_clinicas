@@ -316,3 +316,72 @@ models:
               arguments:
                 to: ref('stg__metodo_pago')
                 field: id_metodo_pago
+
+  - name: stg__medicamento
+    description: "Catálogo de medicamentos"
+    columns:
+      - name: id_medicamento
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_medicamento
+        data_tests:
+          - not_null
+
+  - name: stg__consulta_medicamento
+    description: "Tabla puente entre consultas y medicamentos"
+    columns:
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__consulta')
+                field: id_consulta
+      - name: id_medicamento
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__medicamento')
+                field: id_medicamento
+
+  
+  - name: stg__hospitalización
+    description: "Staging de hospitalizaciones de mascotas"
+    columns:
+      - name: id_hospitalizacion
+        data_tests:
+          - unique
+          - not_null
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__consulta')
+                field: id_consulta
+      - name: id_mascota
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__mascota')
+                field: id_mascota
+      - name: fecha_ingreso
+        data_tests:
+          - not_null
+      - name: fecha_alta
+        data_tests:
+          - not_null
+
+  - name: stg__prueba
+    description: "Catálogo de pruebas médicas"
+    columns:
+      - name: id_prueba
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_prueba
+        data_tests:
+          - not_null
