@@ -94,3 +94,14 @@ macros:
         description: "Valor que se considera FALSE. Por defecto 'NO'"
 
 
+
+  - name: cast_int
+    description: >
+      Convierte una columna a tipo INT usando CAST.
+      Se usa para columnas que vienen como texto pero contienen valores numéricos enteros.
+    arguments:
+      - name: column
+        type: string
+        description: "Nombre de la columna a convertir. Ejemplo: 'id_consulta'"
+
+

@@ -229,3 +229,62 @@ models:
               arguments:
                 to: ref('stg__especie')
                 field: id_especie
+  
+
+  - name: stg__consulta
+    description: " consultas veterinarias"
+    columns:
+      - name: id_consulta
+        data_tests:
+          - unique
+          - not_null
+      - name: id_mascota
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__mascota')
+                field: id_mascota
+      - name: id_motivo
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__motivo_consulta')
+                field: id_motivo
+      - name: id_empleado
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__empleado')
+                field: id_empleado
+      - name: id_centro
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__centro')
+                field: id_centro
+      - name: fecha_consulta
+        data_tests:
+          - not_null
+  
+
+  - name: stg__consulta_vacuna
+    description: "Tabla puente entre consultas y vacunas"
+    columns:
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__consulta')
+                field: id_consulta
+      - name: id_vacuna
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__vacuna')
+                field: id_vacuna

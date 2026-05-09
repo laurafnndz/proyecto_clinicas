@@ -7,7 +7,7 @@ puestos as (
 ),
 renamed as (
     select
-        {{ clean_string('id_empleado') }}                                     AS id_empleado,
+        {{ cast_int('id_empleado') }}                                         AS id_empleado,
         {{ split_name('cv.nombre_completo') }},
         {{ clean_string('cv.dni') }}                                          AS dni,
         {{ cast_date('cv.fecha_alta') }}                                      AS fecha_alta,
