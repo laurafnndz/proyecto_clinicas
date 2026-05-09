@@ -1,7 +1,9 @@
 {% macro clean_string(column) %}
-
-    upper(trim({{ column }}))
-
+    COALESCE(NULLIF(UPPER(TRIM({{ column }})), 'NULL'), 'SIN DATO')
 {% endmacro %}
 
---Macro para quitar espacios y pasar todo a mayúsculas
+
+--Macro para quitar espacios y pasar todo a mayúsculas. En caso de que haya nulos devuelve SIN DATO.
+--También trata los falsos 'null'
+
+--la llamamos de esta manera: {{ clean_string('value') }}

@@ -10,7 +10,7 @@ cleaned as (
         {{ clean_string('ciudad') }}              AS ciudad,
         {{ clean_string('provincia') }}           AS provincia,
         {{ clean_string('comunidad_autonoma') }}  AS comunidad_autonoma,
-        {{ clean_string('pais') }}               AS pais,
+        {{ clean_string('pais') }}                AS pais,   
         TRIM(codigo_postal)              AS codigo_postal
 
     from source
