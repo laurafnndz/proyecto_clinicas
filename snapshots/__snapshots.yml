@@ -1,0 +1,56 @@
+version: 2
+
+snapshots:
+  - name: snp_dueno
+    description: >
+      Snapshot de dueños de mascotas que trackea cambios históricos en sus datos
+      de contacto y ubicación. Implementa SCD2 para detectar cambios en teléfono,
+      email, código postal, provincia, comunidad autónoma, país y ciudad.
+    columns:
+      - name: id_dueno
+        description: "Surrogate key del dueño, clave única del snapshot"
+      - name: telefono
+        description: "Teléfono del dueño, campo trackeado por el snapshot"
+      - name: email
+        description: "Email del dueño, campo trackeado por el snapshot"
+      - name: codigo_postal
+        description: "Código postal del dueño, campo trackeado por el snapshot"
+      - name: provincia
+        description: "Provincia del dueño, campo trackeado por el snapshot"
+      - name: comunidad_autonoma
+        description: "Comunidad autónoma del dueño, campo trackeado por el snapshot"
+      - name: pais
+        description: "País del dueño, campo trackeado por el snapshot"
+      - name: id_ciudad
+        description: "FK hacia stg__ciudad, campo trackeado por el snapshot"
+      - name: dbt_scd_id
+        description: "ID único generado por dbt para cada versión del registro"
+      - name: dbt_updated_at
+        description: "Timestamp de la última actualización del registro"
+      - name: dbt_valid_from
+        description: "Fecha desde la que el registro es válido"
+      - name: dbt_valid_to
+        description: "Fecha hasta la que el registro es válido. NULL si es el registro activo"
+
+  - name: snp_empleado
+    description: >
+      Snapshot de empleados que trackea cambios históricos en su puesto,
+      salario y centro de trabajo. Implementa SCD2 para detectar cambios
+      en id_puesto, salario e id_centro.
+    columns:
+      - name: id_empleado
+        description: "ID del empleado, clave única del snapshot"
+      - name: id_puesto
+        description: "FK hacia stg__puesto, campo trackeado por el snapshot"
+      - name: salario
+        description: "Salario del empleado, campo trackeado por el snapshot"
+      - name: id_centro
+        description: "FK hacia stg__centro, campo trackeado por el snapshot"
+      - name: dbt_scd_id
+        description: "ID único generado por dbt para cada versión del registro"
+      - name: dbt_updated_at
+        description: "Timestamp de la última actualización del registro"
+      - name: dbt_valid_from
+        description: "Fecha desde la que el registro es válido"
+      - name: dbt_valid_to
+        description: "Fecha hasta la que el registro es válido. NULL si es el registro activo"
