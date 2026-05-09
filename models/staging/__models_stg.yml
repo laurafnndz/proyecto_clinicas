@@ -1,4 +1,5 @@
 version: 2
+
 models:
   - name: stg__ciudad
     description: "Catálogo de ciudades únicas de los dueños"
@@ -211,7 +212,6 @@ models:
         data_tests:
           - not_null
 
-
   - name: stg__vacuna
     description: "Catálogo de vacunas con su especie asociada"
     columns:
@@ -229,10 +229,9 @@ models:
               arguments:
                 to: ref('stg__especie')
                 field: id_especie
-  
 
   - name: stg__consulta
-    description: " consultas veterinarias"
+    description: "Consultas veterinarias"
     columns:
       - name: id_consulta
         data_tests:
@@ -269,7 +268,6 @@ models:
       - name: fecha_consulta
         data_tests:
           - not_null
-  
 
   - name: stg__consulta_vacuna
     description: "Tabla puente entre consultas y vacunas"
@@ -346,8 +344,7 @@ models:
                 to: ref('stg__medicamento')
                 field: id_medicamento
 
-  
-  - name: stg__hospitalización
+  - name: stg__hospitalizacion
     description: "Staging de hospitalizaciones de mascotas"
     columns:
       - name: id_hospitalizacion
@@ -407,3 +404,63 @@ models:
       - name: fecha_prueba
         data_tests:
           - not_null
+
+
+#UNIT TEST 1: CON CASE WHEN
+unit_tests:
+  - name: test_numero_colegiado_no_veterinario
+    description: >
+      Verifica que el campo numero_colegiado devuelve NO PROCEDE
+      para empleados que no son veterinarios, y el número de colegiado real
+      para los que sí lo son (VETERINARIO).
+    model: stg__empleado
+    given:
+      - input: source('raw_clinicas', 'empleados')
+        rows:
+          - {id_empleado: 1, nombre_completo: 'Juan Garcia Lopez', dni: '12345678A', puesto: 'ADMINISTRATIVO', numero_colegiado: 'GR001', fecha_alta: '01/01/2020', salario: 2000, nombre_centro: 'Clinica Veterinaria Genil'}
+          - {id_empleado: 2, nombre_completo: 'Ana Martinez Ruiz', dni: '87654321B', puesto: 'VETERINARIO', numero_colegiado: 'GR002', fecha_alta: '01/01/2020', salario: 3000, nombre_centro: 'Clinica Veterinaria Genil'}
+      - input: ref('stg__puesto')
+        rows:
+          - {id_puesto: 'abc123', puesto: 'ADMINISTRATIVO'}
+          - {id_puesto: 'def456', puesto: 'VETERINARIO'}
+    expect:
+      rows:
+        - {numero_colegiado: 'NO PROCEDE'}
+        - {numero_colegiado: 'GR002'}
+
+#UNIT TEST 2 CON CASE WHEN
+     
+  - name: test_numero_chip_pajaro
+    description: >
+      Verifica que el campo numero_chip devuelve NO PROCEDE para pájaros
+      sin chip y NO para el resto de animales sin chip.
+    model: stg__mascota
+    given:
+      - input: source('raw_clinicas', 'consultas')
+        rows:
+          - {nombre_mascota: 'loro', especie: 'pájaro', numero_chip: 'null', dni_dueno: '12345678A'}
+          - {nombre_mascota: 'rex', especie: 'perro', numero_chip: 'null', dni_dueno: '87654321B'}
+          - {nombre_mascota: 'misi', especie: 'gato', numero_chip: '980633924987635', dni_dueno: '11111111C'}
+    expect:
+      rows:
+        - {numero_chip: 'NO PROCEDE'}
+        - {numero_chip: 'NO'}
+        - {numero_chip: '980633924987635'}
+
+#UNIT TEST 3 CON JOIN
+
+  - name: test_id_ciudad_centro
+    description: >
+      Verifica que el join con stg__ciudad resuelve correctamente
+      el id_ciudad para cada centro veterinario.
+    model: stg__centro
+    given:
+      - input: source('raw_clinicas', 'consultas')
+        rows:
+          - {nombre_centro: 'Clinica Veterinaria Genil', direccion_centro: 'calle recogidas 8', cp_centro: '18005', telefono_centro: '958345678', ciudad_centro: 'Granada'}
+      - input: ref('stg__ciudad')
+        rows:
+          - {id_ciudad: 'abc123', ciudad: 'GRANADA'}
+    expect:
+      rows:
+        - {nombre_centro: 'CLINICA VETERINARIA GENIL', id_ciudad: 'abc123'}
