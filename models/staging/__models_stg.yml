@@ -210,3 +210,22 @@ models:
       - name: metodo_pago
         data_tests:
           - not_null
+
+
+  - name: stg__vacuna
+    description: "Catálogo de vacunas con su especie asociada"
+    columns:
+      - name: id_vacuna
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_vacuna
+        data_tests:
+          - not_null
+      - name: id_especie
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__especie')
+                field: id_especie
