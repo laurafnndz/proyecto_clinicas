@@ -372,17 +372,6 @@ models:
         data_tests:
           - not_null
 
-  - name: stg__prueba
-    description: "Catálogo de pruebas médicas"
-    columns:
-      - name: id_prueba
-        data_tests:
-          - unique
-          - not_null
-      - name: nombre_prueba
-        data_tests:
-          - not_null
-
   - name: stg__consulta_prueba
     description: "Tabla puente entre consultas y pruebas médicas"
     columns:

@@ -5,6 +5,9 @@ source as (
 mascotas as (
     select * from {{ ref('stg__mascota') }}
 ),
+duenos as (
+    select * from {{ ref('stg__dueno') }}
+),
 renamed as (
     select
         {{ cast_int('h.id_hospitalizacion') }}      AS id_hospitalizacion,
@@ -13,8 +16,10 @@ renamed as (
         {{ cast_date('h.fecha_ingreso') }}          AS fecha_ingreso,
         {{ cast_date('h.fecha_alta') }}             AS fecha_alta
     from source h
+    left join duenos d
+        on {{ clean_string('h.dni_dueno') }} = d.dni
     left join mascotas m
         on {{ clean_string('h.nombre_mascota') }} = m.nombre_mascota
-        and {{ clean_string('h.dni_dueno') }} = m.dni
+        and d.id_dueno = m.id_dueno
 )
 select * from renamed
