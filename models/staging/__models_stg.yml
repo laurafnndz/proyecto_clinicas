@@ -288,3 +288,31 @@ models:
               arguments:
                 to: ref('stg__vacuna')
                 field: id_vacuna
+
+  - name: stg__factura
+    description: "Staging de facturas de las consultas veterinarias"
+    columns:
+      - name: id_factura
+        data_tests:
+          - unique
+          - not_null
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__consulta')
+                field: id_consulta
+      - name: fecha_emision
+        data_tests:
+          - not_null
+      - name: total
+        data_tests:
+          - not_null
+      - name: id_metodo_pago
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__metodo_pago')
+                field: id_metodo_pago
