@@ -385,3 +385,25 @@ models:
       - name: nombre_prueba
         data_tests:
           - not_null
+
+  - name: stg__consulta_prueba
+    description: "Tabla puente entre consultas y pruebas médicas"
+    columns:
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__consulta')
+                field: id_consulta
+      - name: id_prueba
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__prueba')
+                field: id_prueba
+      - name: resultado
+      - name: fecha_prueba
+        data_tests:
+          - not_null
