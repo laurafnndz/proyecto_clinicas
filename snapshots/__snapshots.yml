@@ -1,28 +1,29 @@
 version: 2
-
 snapshots:
   - name: snp_dueno
     description: >
-      Snapshot de dueños de mascotas que trackea cambios históricos en sus datos
-      de contacto y ubicación. Implementa SCD2 para detectar cambios en teléfono,
-      email, código postal, provincia, comunidad autónoma, país y ciudad.
+      Snapshot de dueños de mascotas que trackea cambios históricos en todos sus datos.
+      Implementa SCD2 mediante estrategia timestamp usando el campo updated_at
+      generado por Fivetran en la ingesta.
     columns:
       - name: id_dueno
         description: "Surrogate key del dueño, clave única del snapshot"
       - name: telefono
-        description: "Teléfono del dueño, campo trackeado por el snapshot"
+        description: "Teléfono del dueño"
       - name: email
-        description: "Email del dueño, campo trackeado por el snapshot"
+        description: "Email del dueño"
       - name: codigo_postal
-        description: "Código postal del dueño, campo trackeado por el snapshot"
+        description: "Código postal del dueño"
       - name: provincia
-        description: "Provincia del dueño, campo trackeado por el snapshot"
+        description: "Provincia del dueño"
       - name: comunidad_autonoma
-        description: "Comunidad autónoma del dueño, campo trackeado por el snapshot"
+        description: "Comunidad autónoma del dueño"
       - name: pais
-        description: "País del dueño, campo trackeado por el snapshot"
+        description: "País del dueño"
       - name: id_ciudad
-        description: "FK hacia stg__ciudad, campo trackeado por el snapshot"
+        description: "FK hacia stg__ciudad"
+      - name: updated_at
+        description: "Timestamp de la última sincronización de Fivetran, usado para detectar cambios"
       - name: dbt_scd_id
         description: "ID único generado por dbt para cada versión del registro"
       - name: dbt_updated_at
@@ -34,18 +35,40 @@ snapshots:
 
   - name: snp_empleado
     description: >
-      Snapshot de empleados que trackea cambios históricos en su puesto,
-      salario y centro de trabajo. Implementa SCD2 para detectar cambios
-      en id_puesto, salario e id_centro.
+      Snapshot de empleados que trackea cambios históricos en todos sus datos.
+      Implementa SCD2 mediante estrategia timestamp usando el campo updated_at
+      generado por Fivetran en la ingesta.
     columns:
       - name: id_empleado
         description: "ID del empleado, clave única del snapshot"
       - name: id_puesto
-        description: "FK hacia stg__puesto, campo trackeado por el snapshot"
+        description: "FK hacia stg__puesto"
       - name: salario
-        description: "Salario del empleado, campo trackeado por el snapshot"
+        description: "Salario del empleado"
       - name: id_centro
-        description: "FK hacia stg__centro, campo trackeado por el snapshot"
+        description: "FK hacia stg__centro"
+      - name: updated_at
+        description: "Timestamp de la última sincronización de Fivetran, usado para detectar cambios"
+      - name: dbt_scd_id
+        description: "ID único generado por dbt para cada versión del registro"
+      - name: dbt_updated_at
+        description: "Timestamp de la última actualización del registro"
+      - name: dbt_valid_from
+        description: "Fecha desde la que el registro es válido"
+      - name: dbt_valid_to
+        description: "Fecha hasta la que el registro es válido. NULL si es el registro activo"
+
+  - name: snp_mascota
+    description: >
+      Snapshot de mascotas que trackea cambios históricos en peso y esterilización.
+      Implementa SCD2 mediante estrategia check comparando los campos peso_gr y esterilizado.
+    columns:
+      - name: id_mascota
+        description: "Surrogate key de la mascota, clave única del snapshot"
+      - name: peso_gr
+        description: "Peso de la mascota en gramos, campo monitorizando cambios"
+      - name: esterilizado
+        description: "Indica si la mascota está esterilizada, campo monitorizando cambios"
       - name: dbt_scd_id
         description: "ID único generado por dbt para cada versión del registro"
       - name: dbt_updated_at

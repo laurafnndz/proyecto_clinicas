@@ -21,7 +21,8 @@ renamed as (
         peso_gr::NUMBER(10,2)                                          AS peso_gr, --pasamos a números con decimales por los pájaros
         {{ cast_date('fecha_nacimiento') }}                             AS fecha_nacimiento,
         DATEDIFF('year',{{ cast_date('fecha_nacimiento') }}, CURRENT_DATE())     AS edad,
-        {{ cast_boolean ('esterilizado') }}                             AS esterilizado --casteamos booleano para esterilizado
+        {{ cast_boolean ('esterilizado') }}                             AS esterilizado, --casteamos booleano para esterilizado
+        _fivetran_synced                                                AS updated_at
         
     from source
 

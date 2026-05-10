@@ -4,8 +4,8 @@
     config(
         target_schema='snapshots',
         unique_key='id_dueno',
-        strategy='check',
-        check_cols=['telefono', 'email', 'codigo_postal', 'provincia', 'comunidad_autonoma', 'pais', 'id_ciudad']
+        strategy='timestamp',
+        updated_at='updated_at'
     )
 }}
 

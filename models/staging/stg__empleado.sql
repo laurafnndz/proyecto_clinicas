@@ -20,9 +20,12 @@ renamed as (
             WHEN p.puesto = 'VETERINARIO' THEN {{ clean_string('cv.numero_colegiado') }}
             ELSE 'NO PROCEDE'
         END                                                                   AS numero_colegiado,
-        {{ generate_surrogate_key(['cv.nombre_centro']) }}                    AS id_centro
+        {{ generate_surrogate_key(['cv.nombre_centro']) }}                    AS id_centro,
+        _fivetran_synced                                                      AS updated_at
     from source cv
     left join puestos p
         on UPPER(cv.puesto) = p.puesto
 )
 select * from renamed
+
+--campo con nsnapshot tipo timestamp

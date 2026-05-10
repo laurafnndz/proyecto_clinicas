@@ -17,10 +17,12 @@ cleaned as (
         {{ handle_null(clean_string('provincia')) }}                                        AS provincia,
         {{ handle_null(clean_string('comunidad_autonoma')) }}                               AS comunidad_autonoma,
         {{ handle_null(clean_string('pais')) }}                                             AS pais,
-        {{ generate_surrogate_key(['ciudad', 'pais'])}}                                     AS id_ciudad
+        {{ generate_surrogate_key(['ciudad', 'pais'])}}                                     AS id_ciudad,
+        _fivetran_synced                                                                    AS updated_at
     from source
 )
 select * from cleaned
 
 --Limpieza de todos los campos y creación de sk para id ciudad (ya hecho en stg__ciudad) y para id_dueno
+--Campo con snapshot tipo timestamp
 
