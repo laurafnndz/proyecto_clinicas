@@ -7,12 +7,13 @@ source as (
 cleaned as (
     select distinct
         {{ generate_surrogate_key(['dni_dueno', 'fecha_nacimiento'])}}                      AS id_dueno,
-        {{ split_name('nombre_dueno') }},
+        {{ separar_nombre('nombre_dueno') }},
         {{ handle_null(clean_string('dni_dueno')) }}                                        AS dni,
         {{ cast_date('fecha_nacimiento') }}                                                 AS fecha_nacimiento, --no aplico handle null porque es dato tipo fecha
         DATEDIFF('year', {{ cast_date('fecha_nacimiento') }}, CURRENT_DATE())               AS edad, --calculo la edad con fecha nacimiento y fecha actual. no handle null
         {{ handle_null(clean_string('telefono_dueno')) }}                                   AS telefono,
         {{ handle_null(clean_string('email_dueno')) }}                                      AS email,
+        {{ handle_null(clean_string('direccion')) }}                                        AS direccion,
         {{ handle_null(clean_string('codigo_postal')) }}                                    AS codigo_postal,
         {{ handle_null(clean_string('provincia')) }}                                        AS provincia,
         {{ handle_null(clean_string('comunidad_autonoma')) }}                               AS comunidad_autonoma,

@@ -1,10 +1,11 @@
 version: 2
 snapshots:
-  - name: snp_dueno
+  - name: snp_dueno #SCD3
     description: >
-      Snapshot de dueños de mascotas que trackea cambios históricos en todos sus datos.
-      Implementa SCD2 mediante estrategia timestamp usando el campo updated_at
-      generado por Fivetran en la ingesta.
+      Snapshot de dueños de mascotas que trackea cambios en datos de contacto
+      mediante estrategia timestamp, comparando los campos telefono, email, 
+      codigo_postal, provincia, comunidad_autonoma y pais para detectar cambios.
+      Sirve como fuente histórica para construir el SCD3 en la capa Gold (dim_dueno). 
     columns:
       - name: id_dueno
         description: "Surrogate key del dueño, clave única del snapshot"
@@ -33,7 +34,7 @@ snapshots:
       - name: dbt_valid_to
         description: "Fecha hasta la que el registro es válido. NULL si es el registro activo"
 
-  - name: snp_empleado
+  - name: snp_empleado #SCD2
     description: >
       Snapshot de empleados que trackea cambios históricos en todos sus datos.
       Implementa SCD2 mediante estrategia timestamp usando el campo updated_at
@@ -60,7 +61,7 @@ snapshots:
 
 
 
-  - name: snp_mascota
+  - name: snp_mascota #SCD2
     description: >
       Snapshot de mascotas que trackea cambios históricos en todos sus datos.
       Implementa SCD2 mediante estrategia timestamp usando el campo updated_at
