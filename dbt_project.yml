@@ -25,6 +25,11 @@ models:
       +database: "{{ env_var('DBT_DATABASE_SILVER', 'DEV_CLINICAS_SILVER') }}"
       +tags:
         - silver
+seeds:
+  proyecto_clinicas:
+    +schema: seeds
+    +database: "{{ env_var('DBT_DATABASE_SILVER', 'DEV_CLINICAS_SILVER') }}"
+#Seed creado con rango de peso apropiado según la especie y raza de animal, así como rango de edad
 
 vars:
   surrogate_key_treat_nulls_as_empty_strings: true #En vez de fallar la creación de la llave surrogada, trae el null como una cadena vacía.

@@ -56,6 +56,8 @@ models:
               arguments:
                 to: ref('stg__ciudad') # FK id_ciudad stg__ciudad
                 field: id_ciudad
+      - name: _fivetran_synced
+        description: "Timestamp de la última sincronización de Fivetran, usado para el snapshot SCD2 timestamp"
 
   - name: stg__especie
     description: "Catálogo de especies de animales"
@@ -189,6 +191,8 @@ models:
               arguments:
                 to: ref('stg__centro') # FK de stg__centro
                 field: id_centro
+      - name: _fivetran_synced
+        description: "Timestamp de la última sincronización de Fivetran, usado para el snapshot SCD2 (timestamp)"
 
   - name: stg__motivo_consulta
     description: "Catálogo de motivos de consulta"

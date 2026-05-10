@@ -67,6 +67,8 @@ sources:
           - name: cp_centro
           - name: telefono_centro
           - name: ciudad_centro
+          - name: _fivetran_synced
+            description: "Timestamp de la última sincronización de Fivetran, usado para el snapshot SCD2" #Fivetran
           
       - name: duenos
         columns:
@@ -80,6 +82,10 @@ sources:
           - name: provincia
           - name: comunidad_autonoma
           - name: pais
+          - name: _fivetran_synced
+            description: "Timestamp de la última sincronización de Fivetran, usado para el snapshot SCD2" #Fivetran
+
+
       - name: empleados
         columns:
           - name: id_empleado
@@ -95,6 +101,10 @@ sources:
           - name: puesto
           - name: numero_colegiado
           - name: nombre_centro
+          - name: _fivetran_synced
+            description: "Timestamp de la última sincronización de Fivetran, usado para el snapshot SCD2" #Fivetran
+
+
       - name: hospitalizaciones
         columns:
           - name: id_hospitalizacion
