@@ -58,17 +58,28 @@ snapshots:
       - name: dbt_valid_to
         description: "Fecha hasta la que el registro es válido. NULL si es el registro activo"
 
+
+
   - name: snp_mascota
     description: >
-      Snapshot de mascotas que trackea cambios históricos en peso y esterilización.
-      Implementa SCD2 mediante estrategia check comparando los campos peso_gr y esterilizado.
+      Snapshot de mascotas que trackea cambios históricos en todos sus datos.
+      Implementa SCD2 mediante estrategia timestamp usando el campo updated_at
+      generado por Fivetran en la ingesta desde la tabla consultas.
     columns:
       - name: id_mascota
         description: "Surrogate key de la mascota, clave única del snapshot"
+      - name: nombre_mascota
+        description: "Nombre de la mascota"
       - name: peso_gr
-        description: "Peso de la mascota en gramos, campo monitorizando cambios"
+        description: "Peso de la mascota en gramos"
       - name: esterilizado
-        description: "Indica si la mascota está esterilizada, campo monitorizando cambios"
+        description: "Indica si la mascota está esterilizada"
+      - name: id_dueno
+        description: "FK hacia stg__dueno"
+      - name: id_raza
+        description: "FK hacia stg__raza"
+      - name: updated_at
+        description: "Timestamp de la última sincronización de Fivetran, usado para detectar cambios"
       - name: dbt_scd_id
         description: "ID único generado por dbt para cada versión del registro"
       - name: dbt_updated_at

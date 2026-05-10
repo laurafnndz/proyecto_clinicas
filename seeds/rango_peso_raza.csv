@@ -1,0 +1,133 @@
+nombre_especie,raza,etapa_vital,peso_min_g,peso_max_g
+Perro,Beagle,Cachorro,300,5000
+Perro,Beagle,Juvenil,5000,9000
+Perro,Beagle,Adulto,9000,11000
+Perro,Beagle,Senior,8000,11000
+Perro,Border Collie,Cachorro,500,8000
+Perro,Border Collie,Juvenil,8000,14000
+Perro,Border Collie,Adulto,14000,20000
+Perro,Border Collie,Senior,13000,20000
+Perro,Bulldog Francés,Cachorro,300,4000
+Perro,Bulldog Francés,Juvenil,4000,9000
+Perro,Bulldog Francés,Adulto,9000,13000
+Perro,Bulldog Francés,Senior,8000,13000
+Perro,Caniche,Cachorro,200,2000
+Perro,Caniche,Juvenil,2000,5000
+Perro,Caniche,Adulto,5000,8000
+Perro,Caniche,Senior,4000,8000
+Perro,Chihuahua,Cachorro,100,800
+Perro,Chihuahua,Juvenil,800,1500
+Perro,Chihuahua,Adulto,1500,3000
+Perro,Chihuahua,Senior,1500,3000
+Perro,Golden Retriever,Cachorro,500,10000
+Perro,Golden Retriever,Juvenil,10000,22000
+Perro,Golden Retriever,Adulto,25000,34000
+Perro,Golden Retriever,Senior,24000,34000
+Perro,Labrador Retriever,Cachorro,500,10000
+Perro,Labrador Retriever,Juvenil,10000,22000
+Perro,Labrador Retriever,Adulto,25000,36000
+Perro,Labrador Retriever,Senior,24000,36000
+Perro,Mestizo,Cachorro,300,5000
+Perro,Mestizo,Juvenil,5000,15000
+Perro,Mestizo,Adulto,10000,30000
+Perro,Mestizo,Senior,10000,30000
+Perro,Pastor Alemán,Cachorro,500,9000
+Perro,Pastor Alemán,Juvenil,9000,22000
+Perro,Pastor Alemán,Adulto,22000,40000
+Perro,Pastor Alemán,Senior,20000,38000
+Perro,Shih Tzu,Cachorro,200,1500
+Perro,Shih Tzu,Juvenil,1500,4000
+Perro,Shih Tzu,Adulto,4000,7500
+Perro,Shih Tzu,Senior,4000,7500
+Gato,Angora,Cachorro,100,1000
+Gato,Angora,Juvenil,1000,3000
+Gato,Angora,Adulto,3000,5000
+Gato,Angora,Senior,3000,5000
+Gato,Bengalí,Cachorro,100,1200
+Gato,Bengalí,Juvenil,1200,3500
+Gato,Bengalí,Adulto,3500,7000
+Gato,Bengalí,Senior,3500,7000
+Gato,Europeo Común,Cachorro,100,1000
+Gato,Europeo Común,Juvenil,1000,3000
+Gato,Europeo Común,Adulto,3000,5000
+Gato,Europeo Común,Senior,3000,5000
+Gato,Maine Coon,Cachorro,100,1500
+Gato,Maine Coon,Juvenil,1500,4000
+Gato,Maine Coon,Adulto,4000,10000
+Gato,Maine Coon,Senior,4000,9000
+Gato,Mestizo,Cachorro,100,1000
+Gato,Mestizo,Juvenil,1000,3000
+Gato,Mestizo,Adulto,3000,5000
+Gato,Mestizo,Senior,3000,5000
+Gato,Persa,Cachorro,100,1200
+Gato,Persa,Juvenil,1200,3500
+Gato,Persa,Adulto,3500,7000
+Gato,Persa,Senior,3500,6500
+Gato,Ragdoll,Cachorro,100,1500
+Gato,Ragdoll,Juvenil,1500,4000
+Gato,Ragdoll,Adulto,4500,9000
+Gato,Ragdoll,Senior,4000,8500
+Gato,Siamés,Cachorro,100,1000
+Gato,Siamés,Juvenil,1000,2500
+Gato,Siamés,Adulto,2500,5000
+Gato,Siamés,Senior,2500,5000
+Conejo,Belier,Cachorro,100,800
+Conejo,Belier,Juvenil,800,2500
+Conejo,Belier,Adulto,3500,8000
+Conejo,Belier,Senior,3000,7500
+Conejo,Enano,Cachorro,100,500
+Conejo,Enano,Juvenil,500,1200
+Conejo,Enano,Adulto,1000,2500
+Conejo,Enano,Senior,1000,2500
+Conejo,Holland Lop,Cachorro,100,600
+Conejo,Holland Lop,Juvenil,600,1500
+Conejo,Holland Lop,Adulto,1500,2500
+Conejo,Holland Lop,Senior,1500,2500
+Conejo,Nueva Zelanda,Cachorro,100,1000
+Conejo,Nueva Zelanda,Juvenil,1000,3000
+Conejo,Nueva Zelanda,Adulto,4000,5500
+Conejo,Nueva Zelanda,Senior,3500,5500
+Hurón,Hurón Angora,Cachorro,100,300
+Hurón,Hurón Angora,Juvenil,300,600
+Hurón,Hurón Angora,Adulto,700,2000
+Hurón,Hurón Angora,Senior,600,1800
+Hurón,Hurón Doméstico Estándar,Cachorro,100,300
+Hurón,Hurón Doméstico Estándar,Juvenil,300,700
+Hurón,Hurón Doméstico Estándar,Adulto,700,2000
+Hurón,Hurón Doméstico Estándar,Senior,600,1800
+Hurón,Hurón Panda,Cachorro,100,300
+Hurón,Hurón Panda,Juvenil,300,700
+Hurón,Hurón Panda,Adulto,700,2000
+Hurón,Hurón Panda,Senior,600,1800
+Hurón,Hurón Sable,Cachorro,100,300
+Hurón,Hurón Sable,Juvenil,300,700
+Hurón,Hurón Sable,Adulto,700,2000
+Hurón,Hurón Sable,Senior,600,1800
+Hurón,Hurón Silver Mitt,Cachorro,100,300
+Hurón,Hurón Silver Mitt,Juvenil,300,700
+Hurón,Hurón Silver Mitt,Adulto,700,2000
+Hurón,Hurón Silver Mitt,Senior,600,1800
+Pájaro,Agaporni,Cachorro,30,45
+Pájaro,Agaporni,Juvenil,40,55
+Pájaro,Agaporni,Adulto,40,60
+Pájaro,Agaporni,Senior,40,60
+Pájaro,Cacatúa,Cachorro,50,200
+Pájaro,Cacatúa,Juvenil,200,600
+Pájaro,Cacatúa,Adulto,300,900
+Pájaro,Cacatúa,Senior,300,800
+Pájaro,Canario,Cachorro,10,18
+Pájaro,Canario,Juvenil,18,25
+Pájaro,Canario,Adulto,20,30
+Pájaro,Canario,Senior,20,28
+Pájaro,Loro Gris,Cachorro,100,200
+Pájaro,Loro Gris,Juvenil,200,380
+Pájaro,Loro Gris,Adulto,400,600
+Pájaro,Loro Gris,Senior,380,580
+Pájaro,Ninfa,Cachorro,70,80
+Pájaro,Ninfa,Juvenil,80,90
+Pájaro,Ninfa,Adulto,80,100
+Pájaro,Ninfa,Senior,80,100
+Pájaro,Periquito,Cachorro,20,30
+Pájaro,Periquito,Juvenil,28,38
+Pájaro,Periquito,Adulto,30,40
+Pájaro,Periquito,Senior,28,40
