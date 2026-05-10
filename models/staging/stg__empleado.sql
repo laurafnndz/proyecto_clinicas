@@ -8,7 +8,7 @@ puestos as (
 renamed as (
     select
         {{ cast_int('id_empleado') }}                                         AS id_empleado,
-        {{ split_name('cv.nombre_completo') }},
+        {{ separr_nombre('cv.nombre_completo') }},
         {{ clean_string('cv.dni') }}                                          AS dni,
         {{ cast_date('cv.fecha_alta') }}                                      AS fecha_alta,
         CAST(cv.salario AS NUMERIC(10,2))                                     AS salario,
