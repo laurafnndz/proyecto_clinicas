@@ -25,7 +25,7 @@ macros:
 
 
 
-  - name: split_name
+  - name: separar_nombre
     description: >
       Separa en diferentes columnas el nombre, primer apellido y segundo apellido
       que vienen de origen en una única columna. Se llama con {{ split_name('nombre_dueno') }}
