@@ -4,7 +4,8 @@ source as (
 ),
 duenos as (
     select id_dueno, dni
-    from {{ ref('stg__dueno') }}
+    from {{ ref('stg__dueno') }} -- en hospitalizaciones no tengo id_dueno, tengo dni, por eso eljoin con stg__dueno para poder tener id dueno y hacer el join con stg__mascota correctamente
+                                --sin ese join solo podría hacer el join de mascota con hospitalizacion con el nombre de la mascota
 ),
 mascotas as (
     select id_mascota, nombre_mascota, id_dueno
