@@ -5,12 +5,12 @@ profile: proyecto_clinicas
 model-paths: ["models"]
 seed-paths: ["seeds"]
 test-paths: ["tests"]
-analysis-paths: ["analyses"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 clean-targets:
   - "target"
   - "dbt_packages"
+
 models:
   proyecto_clinicas:
     staging:
@@ -20,16 +20,22 @@ models:
       +tags:
         - staging
     silver:
-      +materialized: table     
+      +materialized: table
       +schema: silver
       +database: "{{ env_var('DBT_DATABASE_SILVER', 'DEV_CLINICAS_SILVER') }}"
       +tags:
         - silver
+
 seeds:
   proyecto_clinicas:
     +schema: seeds
     +database: "{{ env_var('DBT_DATABASE_SILVER', 'DEV_CLINICAS_SILVER') }}"
-#Seed creado con rango de peso apropiado según la especie y raza de animal, así como rango de edad
+    #Seed creado con rango de peso apropiado según la especie y raza de animal, así como rango de edad
+
+snapshots:
+  proyecto_clinicas:
+    +enabled: true
 
 vars:
-  surrogate_key_treat_nulls_as_empty_strings: true #En vez de fallar la creación de la llave surrogada, trae el null como una cadena vacía.
+  surrogate_key_treat_nulls_as_empty_strings: true
+  #En vez de fallar la creación de la llave surrogada, trae el null como una cadena vacía.

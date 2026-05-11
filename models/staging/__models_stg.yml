@@ -67,7 +67,7 @@ models:
         data_tests:
           - unique
           - not_null
-      - name: especie
+      - name: nombre_especie
         data_tests:
           - not_null
 
@@ -102,7 +102,7 @@ models:
   - name: stg__mascota
     description: >
       Staging de mascotas. El número de chip es NO PROCEDE para pájaros sin chip
-      y NO para el resto de animales sin chip.
+      y SIN DATO para el resto de animales sin chip.
     columns:
       - name: id_mascota
         data_tests:
@@ -132,6 +132,8 @@ models:
       - name: fecha_nacimiento
       - name: edad
       - name: esterilizado
+      - name: updated_at
+        description: "Timestamp de la última sincronización de Fivetran"
 
   - name: stg__centro
     description: "Staging de centros veterinarios con surrogate key de ciudad"
@@ -438,20 +440,26 @@ unit_tests:
   - name: test_numero_chip_pajaro
     description: >
       Verifica que el campo numero_chip devuelve NO PROCEDE para pájaros
-      sin chip y NO para el resto de animales sin chip.
+      sin chip y SIN DATO para el resto de animales sin chip.
     model: stg__mascota
     given:
       - input: source('raw_clinicas', 'consultas')
         rows:
-          - {nombre_mascota: 'loro', especie: 'pájaro', numero_chip: 'null', dni_dueno: '12345678A'}
-          - {nombre_mascota: 'rex', especie: 'perro', numero_chip: 'null', dni_dueno: '87654321B'}
-          - {nombre_mascota: 'misi', especie: 'gato', numero_chip: '980633924987635', dni_dueno: '11111111C'}
+          - {nombre_mascota: 'loro', especie: 'pájaro', numero_chip: null, dni_dueno: '12345678A', raza: 'loro gris', fecha_nacimiento: '01/01/2020', esterilizado: 'no aplica', _fivetran_synced: '2024-01-01'}
+          - {nombre_mascota: 'rex', especie: 'perro', numero_chip: null, dni_dueno: '87654321B', raza: 'beagle', fecha_nacimiento: '01/01/2019', esterilizado: 'si', _fivetran_synced: '2024-01-01'}
+          - {nombre_mascota: 'misi', especie: 'gato', numero_chip: '980633924987635', dni_dueno: '11111111C', raza: 'europeo comun', fecha_nacimiento: '01/01/2018', esterilizado: 'no', _fivetran_synced: '2024-01-01'}
+      - input: ref('stg__dueno')
+        rows:
+          - {id_dueno: 'abc123', dni: '12345678A'}
+          - {id_dueno: 'def456', dni: '87654321B'}
+          - {id_dueno: 'ghi789', dni: '11111111C'}
     expect:
       rows:
         - {numero_chip: 'NO PROCEDE'}
-        - {numero_chip: 'NO'}
+        - {numero_chip: 'SIN DATO'}
         - {numero_chip: '980633924987635'}
 
+        
 #UNIT TEST 3 CON JOIN
 
   - name: test_id_ciudad_centro
@@ -462,7 +470,7 @@ unit_tests:
     given:
       - input: source('raw_clinicas', 'consultas')
         rows:
-          - {nombre_centro: 'Clinica Veterinaria Genil', direccion_centro: 'calle recogidas 8', cp_centro: '18005', telefono_centro: '958345678', ciudad_centro: 'Granada'}
+          - {nombre_centro: 'CLINICA VETERINARIA GENIL', direccion_centro: 'calle recogidas 8', cp_centro: '18005', telefono_centro: '958345678', ciudad_centro: 'Granada'}
       - input: ref('stg__ciudad')
         rows:
           - {id_ciudad: 'abc123', ciudad: 'GRANADA'}
