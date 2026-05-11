@@ -22,7 +22,7 @@ vacunas_case as (
 ),
 renamed as (
     select distinct
-        {{ generate_surrogate_key(['nombre_vacuna']) }}      AS id_vacuna,
+       {{ generate_surrogate_key(['nombre_vacuna', 'especie']) }}  AS id_vacuna,
         nombre_vacuna,
         {{ generate_surrogate_key(['especie']) }}            AS id_especie
     from vacunas_case

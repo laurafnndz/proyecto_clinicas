@@ -5,6 +5,7 @@ source as (
 vacunas_split as (
     select
         id_consulta,
+        especie,
         {{ clean_string('v.value') }}   AS nombre_vacuna
     from source,
     LATERAL FLATTEN(input => SPLIT(vacuna_pendiente, '|')) v
@@ -14,7 +15,7 @@ vacunas_split as (
 renamed as (
     select
         {{ cast_int('id_consulta') }}                           AS id_consulta,
-        {{ generate_surrogate_key(['nombre_vacuna']) }}         AS id_vacuna
+        {{ generate_surrogate_key(['nombre_vacuna', 'especie']) }} AS id_vacuna
     from vacunas_split
 )
 select * from renamed

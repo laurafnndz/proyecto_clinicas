@@ -36,6 +36,8 @@ sources:
                       - gato
                       - perro
                       - pájaro
+                      - hurón
+                     
           - name: numero_chip
           - name: raza
           - name: peso_gr
@@ -61,7 +63,9 @@ sources:
                       - efectivo
                       - bizum
                       - tarjeta
-                      - transferencia
+                      - transferencia 
+                    config:
+                      where: "metodo_pago is not null"
           - name: nombre_centro
           - name: direccion_centro
           - name: cp_centro
