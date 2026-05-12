@@ -3,12 +3,15 @@ macros:
   - name: generate_surrogate_key
     description: >
       Genera una surrogate key única a partir de una o varias columnas
-      usando dbt_utils.generate_surrogate_key. Maneja NULLs automáticamente.
+      usando dbt_utils.generate_surrogate_key. Antes de generar el hash,
+      normaliza cada columna aplicando TRIM, UPPER y eliminando tildes
+      (Á→A, É→E, Í→I, Ó→O, Ú→U, Ñ→N) para garantizar consistencia
+      en la SK independientemente de variaciones de formato.
+      Maneja NULLs automáticamente.
     arguments:
       - name: columns
         type: list
         description: "Lista de columnas que forman la clave. Ejemplo: ['order_id'] o ['order_id', 'product_id']"
-
 
 
   - name: clean_string

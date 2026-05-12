@@ -20,7 +20,7 @@ models:
       +tags:
         - staging
     silver:
-      +materialized: table
+      +materialized: incremental
       +schema: silver
       +database: "{{ env_var('DBT_DATABASE_SILVER', 'DEV_CLINICAS_SILVER') }}"
       +tags:

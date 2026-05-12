@@ -6,9 +6,9 @@ source as (
 
 cleaned as (
     select distinct
-        {{ generate_surrogate_key(['raza']) }}      AS id_raza,
-        {{ clean_string('raza') }}                  AS raza,
-        {{ generate_surrogate_key(['especie']) }}   AS id_especie,
+        {{ generate_surrogate_key(['raza', 'especie']) }} AS id_raza,
+        {{ clean_string('raza') }}                        AS raza,
+        {{ generate_surrogate_key(['especie']) }}         AS id_especie,
         
     from source
 )

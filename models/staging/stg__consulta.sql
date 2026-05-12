@@ -15,12 +15,13 @@ duenos as (
 ),
 renamed as (
     select
-        {{ cast_int('s.id_consulta') }}                                       AS id_consulta,
+        {{ generate_surrogate_key(['s.id_consulta', 's.nombre_mascota', 's.dni_dueno']) }}  AS id_consulta,                               
         m.id_mascota,
         {{ generate_surrogate_key(['s.motivo_consulta']) }}                   AS id_motivo,
         e.id_empleado                                                         AS id_empleado,
         {{ generate_surrogate_key(['s.nombre_centro']) }}                     AS id_centro,
-        {{ cast_date('s.fecha_consulta') }}                                   AS fecha_consulta
+        {{ cast_date('s.fecha_consulta') }}                                   AS fecha_consulta,
+        s._fivetran_synced                                                    AS updated_at
     from source s
     left join empleados e
         on s.numero_colegiado = e.numero_colegiado
@@ -30,4 +31,5 @@ renamed as (
         on {{ clean_string('s.nombre_mascota') }} = m.nombre_mascota
         and d.id_dueno = m.id_dueno
 )
+
 select * from renamed
