@@ -5,6 +5,8 @@ source as (
 vacunas_split as (
     select
         id_consulta,
+        dni_dueno,
+        nombre_mascota,
         especie,
         {{ clean_string('v.value') }}   AS nombre_vacuna
     from source,
@@ -14,8 +16,9 @@ vacunas_split as (
 ),
 renamed as (
     select
-        {{ cast_int('id_consulta') }}                           AS id_consulta,
-        {{ generate_surrogate_key(['nombre_vacuna', 'especie']) }} AS id_vacuna
+        {{ generate_surrogate_key(['id_consulta', 'nombre_mascota', 'dni_dueno']) }}   AS id_consulta,
+        {{ generate_surrogate_key(['nombre_vacuna', 'especie']) }}                      AS id_vacuna
     from vacunas_split
 )
+
 select * from renamed

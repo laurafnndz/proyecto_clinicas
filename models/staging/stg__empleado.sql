@@ -7,7 +7,7 @@ puestos as (
 ),
 renamed as (
     select
-        {{ cast_int('id_empleado') }}                                         AS id_empleado,
+        {{ generate_surrogate_key(['id_empleado', 'dni']) }}               AS id_empleado,                                    
         {{ separar_nombre('nombre_completo') }}
         {{ clean_string('dni') }}                                          AS dni,
         {{ cast_date('fecha_alta') }}                                      AS fecha_alta,
