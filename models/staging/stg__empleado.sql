@@ -28,4 +28,3 @@ renamed as (
 )
 select * from renamed
 
---campo con nsnapshot tipo timestamp
