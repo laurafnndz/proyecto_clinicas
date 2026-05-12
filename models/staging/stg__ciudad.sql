@@ -6,7 +6,7 @@ source as (
 
 cleaned as (
     select distinct
-        {{ dbt_utils.generate_surrogate_key(['ciudad','pais']) }}  AS id_ciudad,  --la realizamos con ciudad y pais por si algun dueño es de otro pais
+        {{ generate_surrogate_key(['ciudad','pais']) }}  AS id_ciudad,  --la realizamos con ciudad y pais por si algun dueño es de otro pais
         {{ clean_string('ciudad') }}              AS ciudad,
         {{ clean_string('provincia') }}           AS provincia,
         {{ clean_string('comunidad_autonoma') }}  AS comunidad_autonoma,

@@ -1,0 +1,87 @@
+version: 2
+
+models:
+  - name: slv__especie
+    description: "Catálogo de especies de mascotas"
+    columns:
+      - name: id_especie
+        description: "Surrogate key generada a partir del nombre de la especie"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_especie
+        description: "Nombre de la especie en mayúsculas y sin espacios"
+        data_type: varchar
+        data_tests:
+          - not_null
+
+  - name: slv__raza
+    description: "Catálogo de razas de mascotas"
+    columns:
+      - name: id_raza
+        description: "Surrogate key generada a partir del nombre de la raza"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: raza
+        description: "Nombre de la raza en mayúsculas y sin espacios"
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: id_especie
+        description: "FK a slv__especie"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('slv__especie')
+              field: id_especie
+  
+
+  - name: slv__puesto
+    description: "Catálogo de puestos de empleados"
+    columns:
+      - name: id_puesto
+        description: "Surrogate key generada a partir del nombre del puesto"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: puesto
+        description: "Nombre del puesto en mayúsculas y sin espacios"
+        data_type: varchar
+        data_tests:
+          - not_null
+
+  - name: slv__motivo
+    description: "Catálogo de motivos de consulta"
+    columns:
+      - name: id_motivo
+        description: "Surrogate key generada a partir del motivo de consulta"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: motivo_consulta
+        description: "Descripción del motivo de consulta en mayúsculas y sin espacios"
+        data_type: varchar
+        data_tests:
+          - not_null
+  
+
+  - name: slv__medicamento
+    description: "Catálogo de medicamentos utilizados en consultas"
+    columns:
+      - name: id_medicamento
+        description: "Surrogate key generada a partir del nombre del medicamento"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_medicamento
+        description: "Nombre del medicamento en mayúsculas y sin espacios"
+        data_type: varchar
+        data_tests:
+          - not_null

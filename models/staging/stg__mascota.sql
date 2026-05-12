@@ -28,7 +28,7 @@ renamed as (
     select
         {{ generate_surrogate_key(['m.nombre_mascota', 'm.dni_dueno', 'm.raza']) }}  AS id_mascota,
         d.id_dueno,
-        {{ generate_surrogate_key(['m.raza']) }}                                      AS id_raza,
+        {{ generate_surrogate_key(['raza', 'especie']) }}                              AS id_raza,
         {{ clean_string('m.nombre_mascota') }}                                        AS nombre_mascota,
         case
             when {{ clean_string('m.especie') }} = 'PÁJARO' and m.numero_chip is null

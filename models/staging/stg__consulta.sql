@@ -15,7 +15,7 @@ duenos as (
 ),
 renamed as (
     select
-        {{ cast_int('s.id_consulta') }}                                       AS id_consulta,
+        {{ generate_surrogate_key(['s.id_consulta', 's.nombre_mascota', 's.dni_dueno']) }}  AS id_consulta,                               
         m.id_mascota,
         {{ generate_surrogate_key(['s.motivo_consulta']) }}                   AS id_motivo,
         e.id_empleado                                                         AS id_empleado,
