@@ -118,3 +118,179 @@ models:
               arguments:
                 to: ref('dim_ubicacion')
                 field: id_ciudad
+
+  
+  - name: dim_empleado
+    description: "Dimensión de empleados con historial SCD2. Cada fila representa una versión del empleado en un periodo de tiempo."
+    columns:
+      - name: id_version
+        description: "ID único de cada versión del empleado, generado por dbt en el snapshot"
+        data_tests:
+          - unique
+          - not_null
+      - name: id_empleado
+        data_tests:
+          - not_null
+      - name: nombre
+        data_tests:
+          - not_null
+      - name: primer_apellido
+        data_tests:
+          - not_null
+      - name: segundo_apellido
+      - name: dni
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+        data_tests:
+          - not_null
+      - name: numero_colegiado
+      - name: salario
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: puesto
+        data_tests:
+          - not_null
+      - name: id_centro
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_centro')
+                field: id_centro
+      - name: dbt_valid_from
+        description: "Fecha desde la que esta versión del empleado es válida"
+        data_tests:
+          - not_null
+      - name: dbt_valid_to
+        description: "Fecha hasta la que esta versión es válida. NULL si es la versión actual"
+      - name: es_actual
+        description: "True si es la versión vigente del empleado (dbt_valid_to es null), False si es histórica"
+        data_tests:
+          - not_null
+  
+
+  - name: dim_mascota
+    description: "Dimensión de mascotas con historial SCD2. Cada fila representa una versión de la mascota en un periodo de tiempo."
+    columns:
+      - name: id_version
+        description: "ID único de cada versión de la mascota, generado por dbt en el snapshot"
+        data_tests:
+          - unique
+          - not_null
+      - name: id_mascota
+        data_tests:
+          - not_null
+      - name: id_dueno
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_dueno')
+                field: id_dueno
+      - name: nombre_mascota
+        data_tests:
+          - not_null
+      - name: numero_chip
+        data_tests:
+          - not_null
+      - name: peso_mascota
+      - name: fecha_nacimiento
+      - name: esterilizado
+      - name: id_raza
+        data_tests:
+          - not_null
+      - name: dbt_valid_from
+        description: "Fecha desde la que esta versión de la mascota es válida"
+        data_tests:
+          - not_null
+      - name: dbt_valid_to
+        description: "Fecha hasta la que esta versión es válida. NULL si es la versión actual"
+      - name: es_actual
+        description: "True si es la versión vigente de la mascota (dbt_valid_to es null), False si es histórica"
+        data_tests:
+          - not_null
+  
+  - name: dim_dueno
+    description: "Dimensión de dueños con historial SCD3. Una fila por dueño con valores actual y anterior de los campos que cambian."
+    columns:
+      - name: id_dueno
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre
+        data_tests:
+          - not_null
+      - name: primer_apellido
+        data_tests:
+          - not_null
+      - name: segundo_apellido
+      - name: dni
+        data_tests:
+          - not_null
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: fecha_nacimiento
+      - name: id_ciudad
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_ubicacion')
+                field: id_ciudad
+      - name: telefono_actual
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: telefono_anterior
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: email_actual
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: email_anterior
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: direccion_actual
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: direccion_anterior
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: codigo_postal_actual
+      - name: codigo_postal_anterior
+      - name: provincia_actual
+      - name: provincia_anterior
+      - name: comunidad_autonoma_actual
+      - name: comunidad_autonoma_anterior
+      - name: pais_actual
+      - name: pais_anterior
+      - name: fecha_ultimo_cambio
+        description: "Fecha desde la que el registro actual es válido"
+        data_tests:
+          - not_null
