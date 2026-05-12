@@ -36,9 +36,9 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__especie')
-              field: id_especie
-  
+              arguments:
+                to: ref('slv__especie')
+                field: id_especie
 
   - name: slv__puesto
     description: "Catálogo de puestos de empleados"
@@ -69,7 +69,6 @@ models:
         data_type: varchar
         data_tests:
           - not_null
-  
 
   - name: slv__medicamento
     description: "Catálogo de medicamentos utilizados en consultas"
@@ -100,7 +99,6 @@ models:
         data_type: varchar
         data_tests:
           - not_null
-  
 
   - name: slv__vacuna
     description: "Catálogo de vacunas por especie"
@@ -122,10 +120,10 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__especie')
-              field: id_especie
+              arguments:
+                to: ref('slv__especie')
+                field: id_especie
 
-  
   - name: slv__ciudad
     description: "Catálogo de ciudades"
     columns:
@@ -150,7 +148,6 @@ models:
           - not_null
       - name: codigo_postal
         data_type: varchar
-
 
   - name: slv__dueno
     description: "Tabla de dueños de mascotas"
@@ -191,9 +188,9 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__ciudad')
-              field: id_ciudad
-
+              arguments:
+                to: ref('slv__ciudad')
+                field: id_ciudad
       - name: updated_at
         description: "Timestamp de la última sincronización de Fivetran"
         data_type: timestamp_tz
@@ -231,25 +228,23 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__puesto')
-              field: id_puesto
+              arguments:
+                to: ref('slv__puesto')
+                field: id_puesto
       - name: numero_colegiado
         data_type: varchar
       - name: id_centro
-        description: "FK a slv__clinica"
+        description: "FK a slv__centro"
         data_type: varchar
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__clinica')
-              field: id_centro
+              arguments:
+                to: ref('slv__centro')
+                field: id_centro
       - name: updated_at
         description: "Timestamp de la última sincronización de Fivetran"
         data_type: timestamp_tz
-
-
-
-
 
   - name: slv__centro
     description: "Tabla de clínicas veterinarias"
@@ -271,8 +266,9 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__ciudad')
-              field: id_ciudad
+              arguments:
+                to: ref('slv__ciudad')
+                field: id_ciudad
       - name: direccion_centro
         data_type: varchar
       - name: cp_centro
@@ -295,16 +291,18 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__dueno')
-              field: id_dueno
+              arguments:
+                to: ref('slv__dueno')
+                field: id_dueno
       - name: id_raza
         description: "FK a slv__raza"
         data_type: varchar
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__raza')
-              field: id_raza
+              arguments:
+                to: ref('slv__raza')
+                field: id_raza
       - name: nombre_mascota
         data_type: varchar
         data_tests:
@@ -336,38 +334,41 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__mascota')
-              field: id_mascota
+              arguments:
+                to: ref('slv__mascota')
+                field: id_mascota
       - name: id_motivo
         description: "FK a slv__motivo"
         data_type: varchar
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__motivo')
-              field: id_motivo
+              arguments:
+                to: ref('slv__motivo')
+                field: id_motivo
       - name: id_empleado
         description: "FK a slv__empleado"
         data_type: varchar
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__empleado')
-              field: id_empleado
+              arguments:
+                to: ref('slv__empleado')
+                field: id_empleado
       - name: id_centro
-        description: "FK a slv__clinica"
+        description: "FK a slv__centro"
         data_type: varchar
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__clinica')
-              field: id_centro
+              arguments:
+                to: ref('slv__centro')
+                field: id_centro
       - name: fecha_consulta
         data_type: date
       - name: updated_at
         description: "Timestamp de la última sincronización de Fivetran"
         data_type: timestamp_tz
-
 
   - name: slv__hospitalizacion
     description: "Tabla de hospitalizaciones"
@@ -384,16 +385,18 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__consulta')
-              field: id_consulta
+              arguments:
+                to: ref('slv__consulta')
+                field: id_consulta
       - name: id_mascota
         description: "FK a slv__mascota"
         data_type: varchar
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__mascota')
-              field: id_mascota
+              arguments:
+                to: ref('slv__mascota')
+                field: id_mascota
       - name: fecha_ingreso
         data_type: date
       - name: fecha_alta
@@ -417,8 +420,9 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__consulta')
-              field: id_consulta
+              arguments:
+                to: ref('slv__consulta')
+                field: id_consulta
       - name: fecha_emision
         data_type: date
       - name: total
@@ -428,12 +432,12 @@ models:
         data_type: varchar
         data_tests:
           - relationships:
-              to: ref('slv__metodo_pago')
-              field: id_metodo_pago
+              arguments:
+                to: ref('slv__metodo_pago')
+                field: id_metodo_pago
       - name: updated_at
         description: "Timestamp de la última sincronización de Fivetran"
         data_type: timestamp_tz
-  
 
   - name: slv__consulta_medicamento
     description: "Tabla relacional entre consultas y medicamentos"
@@ -444,17 +448,18 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__consulta')
-              field: id_consulta
+              arguments:
+                to: ref('slv__consulta')
+                field: id_consulta
       - name: id_medicamento
         description: "FK a slv__medicamento"
         data_type: varchar
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__medicamento')
-              field: id_medicamento
-
+              arguments:
+                to: ref('slv__medicamento')
+                field: id_medicamento
 
   - name: slv__consulta_prueba
     description: "Tabla relacional entre consultas y pruebas"
@@ -465,16 +470,18 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__consulta')
-              field: id_consulta
+              arguments:
+                to: ref('slv__consulta')
+                field: id_consulta
       - name: id_prueba
         description: "FK a slv__prueba"
         data_type: varchar
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__prueba')
-              field: id_prueba
+              arguments:
+                to: ref('slv__prueba')
+                field: id_prueba
       - name: resultado
         data_type: varchar
       - name: fecha_prueba
@@ -489,17 +496,18 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__consulta')
-              field: id_consulta
+              arguments:
+                to: ref('slv__consulta')
+                field: id_consulta
       - name: id_vacuna
         description: "FK a slv__vacuna"
         data_type: varchar
         data_tests:
           - not_null
           - relationships:
-              to: ref('slv__vacuna')
-              field: id_vacuna
-
+              arguments:
+                to: ref('slv__vacuna')
+                field: id_vacuna
 
   - name: slv__prueba
     description: "Catálogo de pruebas médicas"
