@@ -1,6 +1,5 @@
 {{ config(
-    materialized='incremental',
-    unique_key='id_especie'
+    materialized='table'
 ) }}
 
 select
@@ -8,6 +7,3 @@ select
     nombre_especie
 from {{ ref('stg__especie') }}
 
-{% if is_incremental() %}
-    where id_especie not in (select id_especie from {{ this }})
-{% endif %}

@@ -1,6 +1,5 @@
 {{ config(
-    materialized='incremental',
-    unique_key='id_raza'
+    materialized='table'
 ) }}
 
 select
@@ -9,6 +8,3 @@ select
     id_especie
 from {{ ref('stg__raza') }}
 
-{% if is_incremental() %}
-    where id_raza not in (select id_raza from {{ this }})
-{% endif %}

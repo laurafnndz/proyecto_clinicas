@@ -17,7 +17,8 @@ renamed as (
         {{ generate_surrogate_key(['h.id_consulta', 'h.nombre_mascota', 'h.dni_dueno']) }}  AS id_consulta,
         m.id_mascota,
         {{ cast_date('h.fecha_ingreso') }}                                                   AS fecha_ingreso,
-        {{ cast_date('h.fecha_alta') }}                                                      AS fecha_alta
+        {{ cast_date('h.fecha_alta') }}                                                      AS fecha_alta,
+        h._fivetran_synced                                                                   AS updated_at
     from source h
     left join duenos d
         on {{ clean_string('h.dni_dueno') }} = d.dni

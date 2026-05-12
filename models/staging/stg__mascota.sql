@@ -16,7 +16,8 @@ mascotas as (
         s.numero_chip,
         s.fecha_nacimiento,
         s.peso_gr,
-        s.esterilizado
+        s.esterilizado,
+        s._fivetran_synced
     from source s
     qualify row_number() over (
         partition by s.nombre_mascota, s.dni_dueno, s.raza
@@ -39,7 +40,8 @@ renamed as (
         end                                                                           AS numero_chip,
         {{ cast_int('m.peso_gr') }}                                                   AS peso_mascota,
         {{ cast_date('m.fecha_nacimiento') }}                                         AS fecha_nacimiento,
-        {{ cast_boolean('m.esterilizado') }}                                          AS esterilizado
+        {{ cast_boolean('m.esterilizado') }}                                          AS esterilizado,
+        m._fivetran_synced                                                            AS updated_at
     from mascotas m
     left join duenos d on m.dni_dueno = d.dni
 )
