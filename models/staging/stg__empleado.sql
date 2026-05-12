@@ -11,7 +11,7 @@ renamed as (
         {{ separar_nombre('nombre_completo') }},
         {{ clean_string('dni') }}                                          AS dni,
         {{ cast_date('fecha_alta') }}                                      AS fecha_alta,
-        CAST(cv.salario AS NUMERIC(10,2))                                     AS salario,
+        CAST(salario AS NUMERIC(10,2))                                     AS salario,
 
         p.id_puesto,
 
