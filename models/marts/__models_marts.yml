@@ -1,0 +1,120 @@
+version: 2
+
+models:
+  - name: dim_tiempo
+    description: "Dimensión de tiempo generada con date_spine, cubre el rango 2023-2036"
+    columns:
+      - name: id_fecha
+        description: "Fecha en formato DATE, clave primaria de la dimensión"
+        data_tests:
+          - unique
+          - not_null
+      - name: anio
+        data_tests:
+          - not_null
+      - name: mes
+        data_tests:
+          - not_null
+      - name: dia
+        data_tests:
+          - not_null
+      - name: trimestre
+        data_tests:
+          - not_null
+      - name: nombre_dia
+        data_tests:
+          - not_null
+      - name: nombre_mes
+        data_tests:
+          - not_null
+      - name: es_fin_de_semana
+        data_tests:
+          - not_null
+
+  - name: dim_vacuna
+    description: "Catálogo de vacunas"
+    columns:
+      - name: id_vacuna
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_vacuna
+        data_tests:
+          - not_null
+
+  - name: dim_medicamento
+    description: "Catálogo de medicamentos"
+    columns:
+      - name: id_medicamento
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_medicamento
+        data_tests:
+          - not_null
+
+  - name: dim_motivo
+    description: "Catálogo de motivos de consulta"
+    columns:
+      - name: id_motivo
+        data_tests:
+          - unique
+          - not_null
+      - name: motivo_consulta
+        data_tests:
+          - not_null
+
+  - name: dim_metodo_pago
+    description: "Catálogo de métodos de pago"
+    columns:
+      - name: id_metodo_pago
+        data_tests:
+          - unique
+          - not_null
+      - name: metodo_pago
+        data_tests:
+          - not_null
+
+  - name: dim_ubicacion
+    description: "Dimensión de ubicaciones, compartida por dim_centro y dim_dueno"
+    columns:
+      - name: id_ciudad
+        data_tests:
+          - unique
+          - not_null
+      - name: ciudad
+        data_tests:
+          - not_null
+      - name: codigo_postal
+        data_tests:
+          - not_null
+      - name: provincia
+        data_tests:
+          - not_null
+      - name: comunidad_autonoma
+        data_tests:
+          - not_null
+      - name: pais
+        data_tests:
+          - not_null
+
+  - name: dim_centro
+    description: "Dimensión de centros veterinarios"
+    columns:
+      - name: id_centro
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_centro
+        data_tests:
+          - not_null
+      - name: direccion_centro
+      - name: cp_centro
+      - name: telefono_centro
+      - name: id_ciudad
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_ubicacion')
+                field: id_ciudad
