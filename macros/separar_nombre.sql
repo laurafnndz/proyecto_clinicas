@@ -3,6 +3,6 @@
 {% macro separar_nombre(column) %}
     TRIM(UPPER(SPLIT_PART({{ column }}, ' ', 1))) AS nombre,
     TRIM(UPPER(SPLIT_PART({{ column }}, ' ', 2))) AS primer_apellido,
-    TRIM(UPPER(SPLIT_PART({{ column }}, ' ', 3))) AS segundo_apellido
+    TRIM(UPPER(SPLIT_PART({{ column }}, ' ', 3))) AS segundo_apellido,
 {% endmacro %}
 -- la llamamos con esto {{ separar_nombre('nombre_dueno') }}
