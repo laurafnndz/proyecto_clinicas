@@ -294,3 +294,188 @@ models:
         description: "Fecha desde la que el registro actual es válido"
         data_tests:
           - not_null
+
+  - name: fct_historial_clinico
+    description: "Tabla de hechos central. Cada fila representa una consulta veterinaria con sus métricas asociadas."
+    columns:
+      - name: id_consulta
+        data_tests:
+          - unique
+          - not_null
+      - name: id_mascota
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_mascota')
+                field: id_mascota
+      - name: id_empleado
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_empleado')
+                field: id_empleado
+      - name: id_centro
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_centro')
+                field: id_centro
+      - name: id_motivo
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_motivo')
+                field: id_motivo
+      - name: id_fecha
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tiempo')
+                field: id_fecha
+      - name: total_facturacion
+      - name: dias_hospitalizado
+      - name: fue_hospitalizado
+        description: "True si la consulta generó hospitalización, False si no"
+        data_tests:
+          - not_null
+
+  - name: fct_facturacion
+    description: "Tabla de hechos de facturación. Cada fila representa una factura emitida tras una consulta veterinaria."
+    columns:
+      - name: id_factura
+        data_tests:
+          - unique
+          - not_null
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_historial_clinico')
+                field: id_consulta
+      - name: id_metodo_pago
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_metodo_pago')
+                field: id_metodo_pago
+      - name: id_fecha
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tiempo')
+                field: id_fecha
+      - name: total
+        data_tests:
+          - not_null
+
+  - name: fct_hospitalizacion
+    description: "Tabla de hechos de hospitalizaciones. Cada fila representa una hospitalización de una mascota."
+    columns:
+      - name: id_hospitalizacion
+        data_tests:
+          - unique
+          - not_null
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_historial_clinico')
+                field: id_consulta
+      - name: id_mascota
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_mascota')
+                field: id_mascota
+      - name: id_fecha
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tiempo')
+                field: id_fecha
+      - name: fecha_ingreso
+        data_tests:
+          - not_null
+      - name: fecha_alta
+        data_tests:
+          - not_null
+      - name: dias_hospitalizado
+        description: "Número de días entre fecha de ingreso y fecha de alta"
+        data_tests:
+          - not_null
+
+  - name: fct_vacuna
+    description: "Tabla de hechos sin métricas que registra qué vacunas se administraron en cada consulta. Permite analizar patrones de vacunación."
+    columns:
+      - name: id_fct_vacuna
+        description: "Surrogate key generada con la combinación de id_consulta e id_vacuna"
+        data_tests:
+          - unique
+          - not_null
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_historial_clinico')
+                field: id_consulta
+      - name: id_vacuna
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_vacuna')
+                field: id_vacuna
+
+
+  - name: fct_paciente_nuevo
+    description: "Tabla de hechos que registra la primera visita de cada mascota en cada centro veterinario y si el paciente volvió tras esa primera visita."
+    columns:
+      - name: id_fct_paciente_nuevo
+        description: "Surrogate key generada con la combinación de id_mascota e id_centro"
+        data_tests:
+          - unique
+          - not_null
+      - name: id_mascota
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_mascota')
+                field: id_mascota
+      - name: id_centro
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_centro')
+                field: id_centro
+      - name: id_fecha
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tiempo')
+                field: id_fecha
+      - name: id_raza
+        data_tests:
+          - not_null
+      - name: es_nuevo
+        description: "Siempre true. Todos los registros representan la primera visita de una mascota en un centro."
+        data_tests:
+          - not_null
+      - name: volvio
+        description: "True si el paciente volvió al mismo centro tras su primera visita, False si no regresó"
+        data_tests:
+          - not_null
