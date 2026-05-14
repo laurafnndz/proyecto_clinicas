@@ -17,10 +17,7 @@ SELECT
     c.id_centro,
     c.id_motivo,
     CAST(c.fecha_consulta AS DATE)    AS id_fecha_consulta,
-    CAST(cp.fecha_prueba AS DATE)     AS id_fecha_prueba,
-
-    -- Métricas / atributos
-    cp.resultado
+    CAST(cp.fecha_prueba AS DATE)     AS id_fecha_prueba
 
 FROM {{ ref('slv__consulta_prueba') }} cp
 LEFT JOIN {{ ref('slv__consulta') }} c

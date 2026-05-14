@@ -581,7 +581,7 @@ models:
               arguments:
                 to: ref('dim_tiempo')
                 field: id_fecha
-      - name: resultado
+      
 
   - name: fct_paciente_nuevo
     description: "Tabla de hechos que registra la primera visita de cada mascota en cada centro veterinario."
@@ -621,5 +621,16 @@ models:
           - not_null
       - name: volvio
         description: "True si el paciente volvió al mismo centro tras su primera visita, False si no regresó"
+        data_tests:
+          - not_null
+
+  - name: dim_prueba
+    description: "Catálogo de pruebas diagnósticas"
+    columns:
+      - name: id_prueba
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_prueba
         data_tests:
           - not_null
