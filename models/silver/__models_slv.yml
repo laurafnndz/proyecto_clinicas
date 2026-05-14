@@ -482,8 +482,6 @@ models:
               arguments:
                 to: ref('slv__prueba')
                 field: id_prueba
-      - name: resultado
-        data_type: varchar
       - name: fecha_prueba
         data_type: date
 

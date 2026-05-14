@@ -437,7 +437,6 @@ models:
               arguments:
                 to: ref('stg__prueba')
                 field: id_prueba
-      - name: resultado
       - name: fecha_prueba
         data_tests:
           - not_null
