@@ -1,0 +1,523 @@
+version: 2
+
+models:
+  - name: slv__especie
+    description: "Catálogo de especies de mascotas"
+    columns:
+      - name: id_especie
+        description: "Surrogate key generada a partir del nombre de la especie"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_especie
+        description: "Nombre de la especie en mayúsculas y sin espacios"
+        data_type: varchar
+        data_tests:
+          - not_null
+
+  - name: slv__raza
+    description: "Catálogo de razas de mascotas"
+    columns:
+      - name: id_raza
+        description: "Surrogate key generada a partir del nombre de la raza"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: raza
+        description: "Nombre de la raza en mayúsculas y sin espacios"
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: id_especie
+        description: "FK a slv__especie"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__especie')
+                field: id_especie
+
+  - name: slv__puesto
+    description: "Catálogo de puestos de empleados"
+    columns:
+      - name: id_puesto
+        description: "Surrogate key generada a partir del nombre del puesto"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: puesto
+        description: "Nombre del puesto en mayúsculas y sin espacios"
+        data_type: varchar
+        data_tests:
+          - not_null
+
+  - name: slv__motivo
+    description: "Catálogo de motivos de consulta"
+    columns:
+      - name: id_motivo
+        description: "Surrogate key generada a partir del motivo de consulta"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: motivo_consulta
+        description: "Descripción del motivo de consulta en mayúsculas y sin espacios"
+        data_type: varchar
+        data_tests:
+          - not_null
+
+  - name: slv__medicamento
+    description: "Catálogo de medicamentos utilizados en consultas"
+    columns:
+      - name: id_medicamento
+        description: "Surrogate key generada a partir del nombre del medicamento"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_medicamento
+        description: "Nombre del medicamento en mayúsculas y sin espacios"
+        data_type: varchar
+        data_tests:
+          - not_null
+
+  - name: slv__metodo_pago
+    description: "Catálogo de métodos de pago"
+    columns:
+      - name: id_metodo_pago
+        description: "Surrogate key generada a partir del método de pago"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: metodo_pago
+        description: "Nombre del método de pago en mayúsculas y sin espacios"
+        data_type: varchar
+        data_tests:
+          - not_null
+
+  - name: slv__vacuna
+    description: "Catálogo de vacunas por especie"
+    columns:
+      - name: id_vacuna
+        description: "Surrogate key generada a partir del nombre de la vacuna y la especie"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_vacuna
+        description: "Nombre de la vacuna en mayúsculas y sin espacios"
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: id_especie
+        description: "FK a slv__especie"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__especie')
+                field: id_especie
+
+  - name: slv__ciudad
+    description: "Catálogo de ciudades"
+    columns:
+      - name: id_ciudad
+        description: "Surrogate key generada a partir de la ciudad y el país"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: ciudad
+        description: "Nombre de la ciudad en mayúsculas y sin espacios"
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: provincia
+        data_type: varchar
+      - name: comunidad_autonoma
+        data_type: varchar
+      - name: pais
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: codigo_postal
+        data_type: varchar
+
+  - name: slv__dueno
+    description: "Tabla de dueños de mascotas"
+    columns:
+      - name: id_dueno
+        description: "Surrogate key generada a partir del dni y fecha de nacimiento"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: primer_apellido
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: segundo_apellido
+        data_type: varchar
+      - name: dni
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: fecha_nacimiento
+        data_type: date
+      - name: edad
+        data_type: number
+      - name: telefono
+        data_type: varchar
+      - name: email
+        data_type: varchar
+      - name: direccion
+        data_type: varchar
+      - name: id_ciudad
+        description: "FK a slv__ciudad"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__ciudad')
+                field: id_ciudad
+      - name: updated_at
+        description: "Timestamp de la última sincronización de Fivetran"
+        data_type: timestamp_tz
+
+  - name: slv__empleado
+    description: "Tabla de empleados de la clínica veterinaria"
+    columns:
+      - name: id_empleado
+        description: "Surrogate key generada a partir del id y dni del empleado"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: primer_apellido
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: segundo_apellido
+        data_type: varchar
+      - name: dni
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: fecha_alta
+        data_type: date
+      - name: salario
+        data_type: number
+      - name: id_puesto
+        description: "FK a slv__puesto"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__puesto')
+                field: id_puesto
+      - name: numero_colegiado
+        data_type: varchar
+      - name: id_centro
+        description: "FK a slv__centro"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__centro')
+                field: id_centro
+      - name: updated_at
+        description: "Timestamp de la última sincronización de Fivetran"
+        data_type: timestamp_tz
+
+  - name: slv__centro
+    description: "Tabla de clínicas veterinarias"
+    columns:
+      - name: id_centro
+        description: "Surrogate key generada a partir del nombre del centro"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_centro
+        description: "Nombre del centro en mayúsculas y sin espacios"
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: id_ciudad
+        description: "FK a slv__ciudad"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__ciudad')
+                field: id_ciudad
+      - name: direccion_centro
+        data_type: varchar
+      - name: cp_centro
+        data_type: varchar
+      - name: telefono_centro
+        data_type: varchar
+
+  - name: slv__mascota
+    description: "Tabla de mascotas"
+    columns:
+      - name: id_mascota
+        description: "Surrogate key generada a partir del nombre, dni del dueño y raza"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: id_dueno
+        description: "FK a slv__dueno"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__dueno')
+                field: id_dueno
+      - name: id_raza
+        description: "FK a slv__raza"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__raza')
+                field: id_raza
+      - name: nombre_mascota
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: numero_chip
+        data_type: varchar
+      - name: peso_mascota
+        data_type: number
+      - name: fecha_nacimiento
+        data_type: date
+      - name: esterilizado
+        data_type: boolean
+      - name: updated_at
+        description: "Timestamp de la última sincronización de Fivetran"
+        data_type: timestamp_tz
+
+  - name: slv__consulta
+    description: "Tabla de consultas veterinarias"
+    columns:
+      - name: id_consulta
+        description: "Surrogate key generada a partir del id, nombre mascota y dni dueño"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: id_mascota
+        description: "FK a slv__mascota"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__mascota')
+                field: id_mascota
+      - name: id_motivo
+        description: "FK a slv__motivo"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__motivo')
+                field: id_motivo
+      - name: id_empleado
+        description: "FK a slv__empleado"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__empleado')
+                field: id_empleado
+      - name: id_centro
+        description: "FK a slv__centro"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__centro')
+                field: id_centro
+      - name: fecha_consulta
+        data_type: date
+      - name: updated_at
+        description: "Timestamp de la última sincronización de Fivetran"
+        data_type: timestamp_tz
+
+  - name: slv__hospitalizacion
+    description: "Tabla de hospitalizaciones"
+    columns:
+      - name: id_hospitalizacion
+        description: "Surrogate key generada a partir del id hospitalización e id consulta"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: id_consulta
+        description: "FK a slv__consulta"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__consulta')
+                field: id_consulta
+      - name: id_mascota
+        description: "FK a slv__mascota"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__mascota')
+                field: id_mascota
+      - name: fecha_ingreso
+        data_type: date
+      - name: fecha_alta
+        data_type: date
+      - name: updated_at
+        description: "Timestamp de la última sincronización de Fivetran"
+        data_type: timestamp_tz
+
+  - name: slv__factura
+    description: "Tabla de facturas"
+    columns:
+      - name: id_factura
+        description: "Surrogate key generada a partir del id factura e id consulta"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: id_consulta
+        description: "FK a slv__consulta"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__consulta')
+                field: id_consulta
+      - name: fecha_emision
+        data_type: date
+      - name: total
+        data_type: number
+      - name: id_metodo_pago
+        description: "FK a slv__metodo_pago"
+        data_type: varchar
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('slv__metodo_pago')
+                field: id_metodo_pago
+      - name: updated_at
+        description: "Timestamp de la última sincronización de Fivetran"
+        data_type: timestamp_tz
+
+  - name: slv__consulta_medicamento
+    description: "Tabla relacional entre consultas y medicamentos"
+    columns:
+      - name: id_consulta
+        description: "FK a slv__consulta"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__consulta')
+                field: id_consulta
+      - name: id_medicamento
+        description: "FK a slv__medicamento"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__medicamento')
+                field: id_medicamento
+
+  - name: slv__consulta_prueba
+    description: "Tabla relacional entre consultas y pruebas"
+    columns:
+      - name: id_consulta
+        description: "FK a slv__consulta"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__consulta')
+                field: id_consulta
+      - name: id_prueba
+        description: "FK a slv__prueba"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__prueba')
+                field: id_prueba
+      - name: fecha_prueba
+        data_type: date
+
+  - name: slv__consulta_vacuna
+    description: "Tabla relacional entre consultas y vacunas pendientes"
+    columns:
+      - name: id_consulta
+        description: "FK a slv__consulta"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__consulta')
+                field: id_consulta
+      - name: id_vacuna
+        description: "FK a slv__vacuna"
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv__vacuna')
+                field: id_vacuna
+
+  - name: slv__prueba
+    description: "Catálogo de pruebas médicas"
+    columns:
+      - name: id_prueba
+        description: "Surrogate key generada a partir del nombre de la prueba"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_prueba
+        description: "Nombre de la prueba en mayúsculas y sin espacios"
+        data_type: varchar
+        data_tests:
+          - not_null

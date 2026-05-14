@@ -1,0 +1,110 @@
+version: 2
+macros:
+  - name: generate_surrogate_key
+    description: >
+      Genera una surrogate key única a partir de una o varias columnas
+      usando dbt_utils.generate_surrogate_key. Antes de generar el hash,
+      normaliza cada columna aplicando TRIM, UPPER y eliminando tildes
+      (Á→A, É→E, Í→I, Ó→O, Ú→U, Ñ→N) para garantizar consistencia
+      en la SK independientemente de variaciones de formato.
+      Maneja NULLs automáticamente.
+    arguments:
+      - name: columns
+        type: list
+        description: "Lista de columnas que forman la clave. Ejemplo: ['order_id'] o ['order_id', 'product_id']"
+
+
+  - name: clean_string
+    description: >
+      Limpia una columna de texto aplicando trim() para eliminar espacios
+      al inicio y al final, y upper() para convertir a mayúsculas.
+      En caso de que haya NULL devuelve SIN DATO
+      Trata los falsos null pasandolos a null reales y procediendo según lo anterior
+      
+    arguments:
+      - name: column
+        type: string
+        description: "Nombre de la columna a limpiar. Ejemplo: 'email', 'first_name'"
+
+
+
+  - name: separar_nombre
+    description: >
+      Separa en diferentes columnas el nombre, primer apellido y segundo apellido
+      que vienen de origen en una única columna. Se llama con separar_nombre ('nombre_dueno') 
+      Da los resultados en mayúsculas
+    arguments:
+      - name: column
+        type: string
+        description: "Nombre de la columna que contiene el nombre completo. Ejemplo: 'nombre_dueno'"
+
+
+
+  - name: handle_null
+    description: >
+      Reemplaza valores NULL por un valor por defecto. Por defecto devuelve 'SIN DATO'.
+      Se puede personalizar el valor por defecto pasando un segundo argumento.
+    arguments:
+      - name: column
+        type: string
+        description: "Nombre de la columna a tratar. Ejemplo: 'dni_dueno'"
+      - name: default_value
+        type: string
+        description: "Valor por defecto si la columna es NULL. Por defecto es 'SIN DATO'"
+
+
+
+  - name: generate_schema_name
+    description: >
+      Sobreescribe el comportamiento por defecto de dbt para la generación de nombres de schema.
+      Si se define un schema personalizado en el modelo, usa ese exactamente sin concatenar
+      el schema del perfil. Si no se define ninguno, usa el schema del target.
+    arguments:
+      - name: custom_schema_name
+        type: string
+        description: "Nombre del schema personalizado definido en el modelo o dbt_project.yml"
+      - name: node
+        type: any
+        description: "Nodo del modelo actual, proporcionado automáticamente por dbt"
+
+
+
+  - name: cast_date
+    description: >
+      Convierte una columna de texto a tipo DATE usando TRY_CAST.
+      Si el valor es NULL o no se puede convertir devuelve NULL sin romper el modelo.
+    arguments:
+      - name: column
+        type: string
+        description: "Nombre de la columna a convertir. Ejemplo: 'fecha_nacimiento'"
+
+
+
+  - name: cast_boolean
+    description: >
+      Convierte una columna de texto con valores SI/NO a tipo BOOLEAN.
+      Devuelve TRUE para SI, FALSE para NO y NULL para cualquier otro valor.
+      Los valores por defecto son SI y NO pero se pueden personalizar.
+    arguments:
+      - name: column
+        type: string
+        description: "Nombre de la columna a convertir. Ejemplo: 'esterilizado'"
+      - name: true_value
+        type: string
+        description: "Valor que se considera TRUE. Por defecto 'SI'"
+      - name: false_value
+        type: string
+        description: "Valor que se considera FALSE. Por defecto 'NO'"
+
+
+
+  - name: cast_int
+    description: >
+      Convierte una columna a tipo INT usando CAST.
+      Se usa para columnas que vienen como texto pero contienen valores numéricos enteros.
+    arguments:
+      - name: column
+        type: string
+        description: "Nombre de la columna a convertir. Ejemplo: 'id_consulta'"
+
+

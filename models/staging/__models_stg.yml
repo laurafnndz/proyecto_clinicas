@@ -1,0 +1,508 @@
+version: 2
+
+models:
+  - name: stg__ciudad
+    description: "Catálogo de ciudades únicas de los dueños"
+    columns:
+      - name: id_ciudad
+        data_tests:
+          - unique
+          - not_null
+      - name: ciudad
+      - name: provincia
+        data_tests:
+          - not_null
+      - name: pais
+        data_tests:
+          - not_null
+      - name: codigo_postal
+        data_tests:
+          - not_null
+
+  - name: stg__dueno
+    description: >
+      Staging de dueños de mascotas. Todas las columnas están tratadas para que
+      en caso de null, salga SIN DATO (excepto fecha nacimiento y edad)
+    columns:
+      - name: id_dueno
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre
+        data_tests:
+          - not_null
+      - name: primer_apellido
+        data_tests:
+          - not_null
+      - name: segundo_apellido
+      - name: dni
+        data_tests:
+          - not_null
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: fecha_nacimiento
+      - name: edad
+        description: datediff de fecha nacimiento y fecha actual
+      - name: telefono
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: email
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: direccion
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: codigo_postal
+      - name: provincia
+      - name: comunidad_autonoma
+      - name: pais
+        data_tests:
+          - not_null
+      - name: id_ciudad
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__ciudad')
+                field: id_ciudad
+      - name: updated_at
+        description: "Timestamp de la última sincronización de Fivetran"
+
+  - name: stg__especie
+    description: "Catálogo de especies de animales"
+    columns:
+      - name: id_especie
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_especie
+        data_tests:
+          - not_null
+
+  - name: stg__raza
+    description: "Catálogo de razas de animales"
+    columns:
+      - name: id_raza
+        data_tests:
+          - not_null
+      - name: raza
+        data_tests:
+          - not_null
+      - name: id_especie
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__especie') # FK referencia a stg__especie
+                field: id_especie
+
+  - name: stg__puesto
+    description: "Catálogo de puestos de trabajo de los empleados"
+    columns:
+      - name: id_puesto
+        data_tests:
+          - unique
+          - not_null
+      - name: puesto
+        data_tests:
+          - not_null
+
+  - name: stg__mascota
+    description: >
+      Staging de mascotas. El número de chip es NO PROCEDE para pájaros sin chip
+      y SIN DATO para el resto de animales sin chip.
+    columns:
+      - name: id_mascota
+        data_tests:
+          - unique
+          - not_null
+      - name: id_dueno
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__dueno') # FK de stg__dueno
+                field: id_dueno
+      - name: nombre_mascota
+        data_tests:
+          - not_null
+      - name: numero_chip
+        data_tests:
+          - not_null
+      - name: id_raza
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__raza') # FK stg__raza
+                field: id_raza
+      - name: peso_gr
+      - name: fecha_nacimiento
+      - name: edad
+      - name: esterilizado
+      - name: updated_at
+        description: "Timestamp de la última sincronización de Fivetran"
+
+  - name: stg__centro
+    description: "Staging de centros veterinarios con surrogate key de ciudad"
+    columns:
+      - name: id_centro
+        description: "Surrogate key del centro veterinario"
+        data_tests:
+          - not_null
+          - unique
+      - name: nombre_centro
+        description: "Nombre del centro veterinario"
+        data_tests:
+          - not_null
+      - name: id_ciudad
+        description: "FK hacia stg__ciudad"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__ciudad') # FK hacia stg__ciudad
+                field: id_ciudad
+      - name: direccion_centro
+        description: "Dirección del centro veterinario"
+      - name: cp_centro
+        description: "Código postal del centro veterinario"
+      - name: telefono_centro
+        description: "Teléfono del centro veterinario"
+
+  - name: stg__empleado
+    description: "Empleados de los centros veterinarios"
+    columns:
+      - name: id_empleado
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre
+      - name: primer_apellido
+      - name: segundo_apellido
+      - name: dni
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+        data_tests:
+          - not_null
+      - name: fecha_alta
+        data_tests:
+          - not_null
+      - name: salario
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: id_puesto
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__puesto') # FK de stg__puesto
+                field: id_puesto
+      - name: numero_colegiado
+      - name: id_centro
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__centro') # FK de stg__centro
+                field: id_centro
+      - name: _fivetran_synced
+        description: "Timestamp de la última sincronización de Fivetran, usado para el snapshot SCD2 (timestamp)"
+
+  - name: stg__motivo_consulta
+    description: "Catálogo de motivos de consulta"
+    columns:
+      - name: id_motivo
+        data_tests:
+          - unique
+          - not_null
+      - name: motivo_consulta
+        data_tests:
+          - not_null
+
+  - name: stg__metodo_pago
+    description: "Catálogo de métodos de pago"
+    columns:
+      - name: id_metodo_pago
+        data_tests:
+          - unique
+          - not_null
+      - name: metodo_pago
+        data_tests:
+          - not_null
+
+  - name: stg__vacuna
+    description: "Catálogo de vacunas con su especie asociada"
+    columns:
+      - name: id_vacuna
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_vacuna
+        data_tests:
+          - not_null
+      - name: id_especie
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__especie')
+                field: id_especie
+
+  - name: stg__consulta
+    description: "Consultas veterinarias"
+    columns:
+      - name: id_consulta
+        data_tests:
+          - unique
+          - not_null
+      - name: id_mascota
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__mascota')
+                field: id_mascota
+      - name: id_motivo
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__motivo_consulta')
+                field: id_motivo
+      - name: id_empleado
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__empleado')
+                field: id_empleado
+      - name: id_centro
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__centro')
+                field: id_centro
+      - name: fecha_consulta
+        data_tests:
+          - not_null
+
+  - name: stg__consulta_vacuna
+    description: "Tabla puente entre consultas y vacunas"
+    columns:
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__consulta')
+                field: id_consulta
+      - name: id_vacuna
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__vacuna')
+                field: id_vacuna
+
+  - name: stg__factura
+    description: "Staging de facturas de las consultas veterinarias"
+    columns:
+      - name: id_factura
+        data_tests:
+          - unique
+          - not_null
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__consulta')
+                field: id_consulta
+      - name: fecha_emision
+        data_tests:
+          - not_null
+      - name: total
+        data_tests:
+          - not_null
+      - name: id_metodo_pago
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__metodo_pago')
+                field: id_metodo_pago
+
+  - name: stg__medicamento
+    description: "Catálogo de medicamentos"
+    columns:
+      - name: id_medicamento
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_medicamento
+        data_tests:
+          - not_null
+
+  - name: stg__consulta_medicamento
+    description: "Tabla puente entre consultas y medicamentos"
+    columns:
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__consulta')
+                field: id_consulta
+      - name: id_medicamento
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__medicamento')
+                field: id_medicamento
+
+  - name: stg__hospitalizacion
+    description: "Staging de hospitalizaciones de mascotas"
+    columns:
+      - name: id_hospitalizacion
+        data_tests:
+          - unique
+          - not_null
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__consulta')
+                field: id_consulta
+      - name: id_mascota
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__mascota')
+                field: id_mascota
+      - name: fecha_ingreso
+        data_tests:
+          - not_null
+      - name: fecha_alta
+        data_tests:
+          - not_null
+
+  - name: stg__prueba
+    description: "Catálogo de pruebas médicas"
+    columns:
+      - name: id_prueba
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_prueba
+        data_tests:
+          - not_null
+
+  - name: stg__consulta_prueba
+    description: "Tabla puente entre consultas y pruebas médicas"
+    columns:
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__consulta')
+                field: id_consulta
+      - name: id_prueba
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg__prueba')
+                field: id_prueba
+      - name: fecha_prueba
+        data_tests:
+          - not_null
+
+
+#UNIT TEST 1: CON CASE WHEN
+unit_tests:
+  - name: test_numero_colegiado_no_veterinario
+    description: >
+      Verifica que el campo numero_colegiado devuelve NO PROCEDE
+      para empleados que no son veterinarios, y el número de colegiado real
+      para los que sí lo son (VETERINARIO).
+    model: stg__empleado
+    given:
+      - input: source('raw_clinicas', 'empleados')
+        rows:
+          - {id_empleado: 1, nombre_completo: 'Juan Garcia Lopez', dni: '12345678A', puesto: 'ADMINISTRATIVO', numero_colegiado: 'GR001', fecha_alta: '01/01/2020', salario: 2000, nombre_centro: 'Clinica Veterinaria Genil'}
+          - {id_empleado: 2, nombre_completo: 'Ana Martinez Ruiz', dni: '87654321B', puesto: 'VETERINARIO', numero_colegiado: 'GR002', fecha_alta: '01/01/2020', salario: 3000, nombre_centro: 'Clinica Veterinaria Genil'}
+      - input: ref('stg__puesto')
+        rows:
+          - {id_puesto: 'abc123', puesto: 'ADMINISTRATIVO'}
+          - {id_puesto: 'def456', puesto: 'VETERINARIO'}
+    expect:
+      rows:
+        - {numero_colegiado: 'NO PROCEDE'}
+        - {numero_colegiado: 'GR002'}
+
+#UNIT TEST 2 CON CASE WHEN
+     
+  - name: test_numero_chip_pajaro
+    description: >
+      Verifica que el campo numero_chip devuelve NO PROCEDE para pájaros
+      sin chip y SIN DATO para el resto de animales sin chip.
+    model: stg__mascota
+    given:
+      - input: source('raw_clinicas', 'consultas')
+        rows:
+          - {nombre_mascota: 'loro', especie: 'pájaro', numero_chip: null, dni_dueno: '12345678A', raza: 'loro gris', fecha_nacimiento: '01/01/2020', esterilizado: 'no aplica', _fivetran_synced: '2024-01-01'}
+          - {nombre_mascota: 'rex', especie: 'perro', numero_chip: null, dni_dueno: '87654321B', raza: 'beagle', fecha_nacimiento: '01/01/2019', esterilizado: 'si', _fivetran_synced: '2024-01-01'}
+          - {nombre_mascota: 'misi', especie: 'gato', numero_chip: '980633924987635', dni_dueno: '11111111C', raza: 'europeo comun', fecha_nacimiento: '01/01/2018', esterilizado: 'no', _fivetran_synced: '2024-01-01'}
+      - input: ref('stg__dueno')
+        rows:
+          - {id_dueno: 'abc123', dni: '12345678A'}
+          - {id_dueno: 'def456', dni: '87654321B'}
+          - {id_dueno: 'ghi789', dni: '11111111C'}
+    expect:
+      rows:
+        - {numero_chip: 'NO PROCEDE'}
+        - {numero_chip: 'SIN DATO'}
+        - {numero_chip: '980633924987635'}
+
+        
+#UNIT TEST 3 CON JOIN
+
+  - name: test_id_ciudad_centro
+    description: >
+      Verifica que el join con stg__ciudad resuelve correctamente
+      el id_ciudad para cada centro veterinario.
+    model: stg__centro
+    given:
+      - input: source('raw_clinicas', 'consultas')
+        rows:
+          - {nombre_centro: 'CLINICA VETERINARIA GENIL', direccion_centro: 'calle recogidas 8', cp_centro: '18005', telefono_centro: '958345678', ciudad_centro: 'Granada'}
+      - input: ref('stg__ciudad')
+        rows:
+          - {id_ciudad: 'abc123', ciudad: 'GRANADA'}
+    expect:
+      rows:
+        - {nombre_centro: 'CLINICA VETERINARIA GENIL', id_ciudad: 'abc123'}

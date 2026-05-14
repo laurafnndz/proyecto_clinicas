@@ -1,0 +1,169 @@
+version: 2
+sources:
+  - name: raw_clinicas
+    description: Tablas de schema raw en db bronze
+    database: dev_clinicas_bronze
+    schema: raw_clinicas
+    config:
+      enabled: true
+      tags:
+        - bronze
+        - clinicas
+      freshness:
+        warn_after:
+          count: 2
+          period: day
+        error_after:
+          count: 3
+          period: day
+    tables:
+      - name: consultas
+        columns:
+          - name: id_consulta
+            description: "Identificador unico de la consulta"
+            data_tests:
+              - unique
+              - not_null
+          - name: fecha_consulta
+          - name: nombre_mascota
+          - name: especie
+            description: "Especie de mascota, solo podran ser gato, conejo, perro o pajaro"
+            data_tests:
+              - accepted_values:
+                  arguments:
+                    values:
+                      - conejo
+                      - gato
+                      - perro
+                      - pájaro
+                      - hurón
+          - name: numero_chip
+          - name: raza
+          - name: peso_gr
+          - name: fecha_nacimiento
+          - name: esterilizado
+          - name: vacuna_pendiente
+          - name: motivo_consulta
+          - name: dni_dueno
+            config:
+              tags:
+                - pii
+              meta:
+                pii: true
+          - name: veterinario
+          - name: numero_colegiado
+          - name: medicamentos
+          - name: pruebas
+          - name: resultado_prueba
+          - name: id_factura
+          - name: fecha_emision
+          - name: total
+          - name: metodo_pago
+            description: "Solo podra ser tarjeta, efectivo, transferencia o bizum"
+            data_tests:
+              - accepted_values:
+                  arguments:
+                    values:
+                      - efectivo
+                      - bizum
+                      - tarjeta
+                      - transferencia
+                    config:
+                      where: "metodo_pago is not null"
+          - name: nombre_centro
+          - name: direccion_centro
+          - name: cp_centro
+          - name: telefono_centro
+          - name: ciudad_centro
+          - name: _fivetran_synced
+            description: "Timestamp de la última sincronización de Fivetran, usado para el snapshot SCD2"
+
+      - name: duenos
+        columns:
+          - name: nombre_dueno
+          - name: dni_dueno
+            config:
+              tags:
+                - pii
+              meta:
+                pii: true
+          - name: fecha_nacimiento
+          - name: telefono_dueno
+            config:
+              tags:
+                - pii
+              meta:
+                pii: true
+          - name: email_dueno
+            config:
+              tags:
+                - pii
+              meta:
+                pii: true
+          - name: direccion
+            config:
+              tags:
+                - pii
+              meta:
+                pii: true
+          - name: codigo_postal
+          - name: provincia
+          - name: comunidad_autonoma
+          - name: pais
+          - name: _fivetran_synced
+            description: "Timestamp de la última sincronización de Fivetran, usado para el snapshot SCD2"
+
+      - name: empleados
+        columns:
+          - name: id_empleado
+            description: Identificador unico de empleados
+            data_tests:
+              - unique
+              - not_null
+          - name: nombre_completo
+          - name: dni
+            config:
+              tags:
+                - pii
+              meta:
+                pii: true
+          - name: fecha_nacimiento
+          - name: fecha_alta
+          - name: salario
+            config:
+              tags:
+                - pii
+              meta:
+                pii: true
+          - name: puesto
+          - name: numero_colegiado
+          - name: nombre_centro
+          - name: _fivetran_synced
+            description: "Timestamp de la última sincronización de Fivetran, usado para el snapshot SCD2"
+
+      - name: hospitalizaciones
+        columns:
+          - name: id_hospitalizacion
+            data_tests:
+              - unique
+              - not_null
+          - name: id_consulta
+            description: Identificador de la consulta
+            data_tests:
+              - unique
+              - not_null
+          - name: nombre_mascota
+          - name: dni_dueno
+            config:
+              tags:
+                - pii
+              meta:
+                pii: true
+          - name: telefono_dueno
+            config:
+              tags:
+                - pii
+              meta:
+                pii: true
+          - name: fecha_ingreso
+          - name: fecha_alta
