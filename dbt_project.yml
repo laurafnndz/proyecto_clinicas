@@ -26,6 +26,14 @@ models:
       +tags:
         - silver
 
+    marts:
+      +materialized: table
+      +schema: gold
+      +database: "{{ env_var('DBT_DATABASE_GOLD', 'DEV_CLINICAS_GOLD') }}"
+      +tags:
+        - gold
+  
+
 seeds:
   proyecto_clinicas:
     +schema: seeds

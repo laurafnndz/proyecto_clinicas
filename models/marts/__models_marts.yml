@@ -1,0 +1,625 @@
+version: 2
+
+models:
+  - name: dim_tiempo
+    description: "Dimensión de tiempo generada con date_spine, cubre el rango 2023-2036"
+    columns:
+      - name: id_fecha
+        description: "Fecha en formato DATE, clave primaria de la dimensión"
+        data_tests:
+          - unique
+          - not_null
+      - name: anio
+        data_tests:
+          - not_null
+      - name: mes
+        data_tests:
+          - not_null
+      - name: dia
+        data_tests:
+          - not_null
+      - name: trimestre
+        data_tests:
+          - not_null
+      - name: nombre_dia
+        data_tests:
+          - not_null
+      - name: nombre_mes
+        data_tests:
+          - not_null
+      - name: es_fin_de_semana
+        data_tests:
+          - not_null
+
+  - name: dim_vacuna
+    description: "Catálogo de vacunas"
+    columns:
+      - name: id_vacuna
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_vacuna
+        data_tests:
+          - not_null
+
+  - name: dim_medicamento
+    description: "Catálogo de medicamentos"
+    columns:
+      - name: id_medicamento
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_medicamento
+        data_tests:
+          - not_null
+
+  - name: dim_motivo
+    description: "Catálogo de motivos de consulta"
+    columns:
+      - name: id_motivo
+        data_tests:
+          - unique
+          - not_null
+      - name: motivo_consulta
+        data_tests:
+          - not_null
+
+  - name: dim_metodo_pago
+    description: "Catálogo de métodos de pago"
+    columns:
+      - name: id_metodo_pago
+        data_tests:
+          - unique
+          - not_null
+      - name: metodo_pago
+        data_tests:
+          - not_null
+
+  - name: dim_ubicacion
+    description: "Dimensión de ubicaciones, compartida por dim_centro y dim_dueno"
+    columns:
+      - name: id_ciudad
+        data_tests:
+          - unique
+          - not_null
+      - name: ciudad
+        data_tests:
+          - not_null
+      - name: codigo_postal
+        data_tests:
+          - not_null
+      - name: provincia
+        data_tests:
+          - not_null
+      - name: comunidad_autonoma
+        data_tests:
+          - not_null
+      - name: pais
+        data_tests:
+          - not_null
+
+  - name: dim_centro
+    description: "Dimensión de centros veterinarios"
+    columns:
+      - name: id_centro
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_centro
+        data_tests:
+          - not_null
+      - name: direccion_centro
+      - name: cp_centro
+      - name: telefono_centro
+      - name: id_ciudad
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_ubicacion')
+                field: id_ciudad
+
+  - name: dim_empleado
+    description: "Dimensión de empleados con historial SCD2. Cada fila representa una versión del empleado en un periodo de tiempo."
+    columns:
+      - name: id_version
+        description: "ID único de cada versión del empleado, generado por dbt en el snapshot"
+        data_tests:
+          - unique
+          - not_null
+      - name: id_empleado
+        data_tests:
+          - not_null
+      - name: nombre
+        data_tests:
+          - not_null
+      - name: primer_apellido
+        data_tests:
+          - not_null
+      - name: segundo_apellido
+      - name: dni
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+        data_tests:
+          - not_null
+      - name: numero_colegiado
+      - name: salario
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: puesto
+        data_tests:
+          - not_null
+      - name: id_centro
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_centro')
+                field: id_centro
+      - name: dbt_valid_from
+        description: "Fecha desde la que esta versión del empleado es válida"
+        data_tests:
+          - not_null
+      - name: dbt_valid_to
+        description: "Fecha hasta la que esta versión es válida. NULL si es la versión actual"
+      - name: es_actual
+        description: "True si es la versión vigente del empleado (dbt_valid_to es null), False si es histórica"
+        data_tests:
+          - not_null
+
+  - name: dim_mascota
+    description: "Dimensión de mascotas con historial SCD2. Cada fila representa una versión de la mascota en un periodo de tiempo."
+    columns:
+      - name: id_version
+        description: "ID único de cada versión de la mascota, generado por dbt en el snapshot"
+        data_tests:
+          - unique
+          - not_null
+      - name: id_mascota
+        data_tests:
+          - not_null
+      - name: id_dueno
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_dueno')
+                field: id_dueno
+      - name: nombre_mascota
+        data_tests:
+          - not_null
+      - name: numero_chip
+        data_tests:
+          - not_null
+      - name: peso_mascota
+      - name: fecha_nacimiento
+      - name: esterilizado
+      - name: id_raza
+        data_tests:
+          - not_null
+      - name: dbt_valid_from
+        description: "Fecha desde la que esta versión de la mascota es válida"
+        data_tests:
+          - not_null
+      - name: dbt_valid_to
+        description: "Fecha hasta la que esta versión es válida. NULL si es la versión actual"
+      - name: es_actual
+        description: "True si es la versión vigente de la mascota (dbt_valid_to es null), False si es histórica"
+        data_tests:
+          - not_null
+
+  - name: dim_dueno
+    description: "Dimensión de dueños con historial SCD3. Una fila por dueño con valores actual y anterior de los campos que cambian."
+    columns:
+      - name: id_dueno
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre
+        data_tests:
+          - not_null
+      - name: primer_apellido
+        data_tests:
+          - not_null
+      - name: segundo_apellido
+      - name: dni
+        data_tests:
+          - not_null
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: fecha_nacimiento
+      - name: id_ciudad
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_ubicacion')
+                field: id_ciudad
+      - name: telefono_actual
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: telefono_anterior
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: email_actual
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: email_anterior
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: direccion_actual
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: direccion_anterior
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
+      - name: codigo_postal_actual
+      - name: codigo_postal_anterior
+      - name: provincia_actual
+      - name: provincia_anterior
+      - name: comunidad_autonoma_actual
+      - name: comunidad_autonoma_anterior
+      - name: pais_actual
+      - name: pais_anterior
+      - name: fecha_ultimo_cambio
+        description: "Fecha desde la que el registro actual es válido"
+        data_tests:
+          - not_null
+
+  - name: fct_historial_clinico
+    description: "Tabla de hechos central. Cada fila representa una consulta veterinaria."
+    columns:
+      - name: id_consulta
+        data_tests:
+          - unique
+          - not_null
+      - name: id_factura
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('fct_facturacion')
+                field: id_factura
+      - name: id_mascota
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_mascota')
+                field: id_mascota
+      - name: id_empleado
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_empleado')
+                field: id_empleado
+      - name: id_centro
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_centro')
+                field: id_centro
+      - name: id_motivo
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_motivo')
+                field: id_motivo
+      - name: id_fecha
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tiempo')
+                field: id_fecha
+      - name: fue_hospitalizado
+        description: "True si la consulta generó hospitalización, False si no"
+        data_tests:
+          - not_null
+
+  - name: fct_facturacion
+    description: "Tabla de hechos de facturación. Cada fila representa una factura emitida tras una consulta veterinaria."
+    columns:
+      - name: id_factura
+        data_tests:
+          - unique
+          - not_null
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_historial_clinico')
+                field: id_consulta
+      - name: id_metodo_pago
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_metodo_pago')
+                field: id_metodo_pago
+      - name: id_mascota
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_mascota')
+                field: id_mascota
+      - name: id_empleado
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_empleado')
+                field: id_empleado
+      - name: id_centro
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_centro')
+                field: id_centro
+      - name: id_fecha
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tiempo')
+                field: id_fecha
+      - name: total
+        data_tests:
+          - not_null
+      - name: fue_hospitalizado
+        description: "True si la consulta asociada generó hospitalización, False si no"
+        data_tests:
+          - not_null
+      - name: num_medicamentos
+        description: "Número de medicamentos prescritos en la consulta asociada"
+        data_tests:
+          - not_null
+      - name: num_pruebas
+        description: "Número de pruebas diagnósticas realizadas en la consulta asociada"
+        data_tests:
+          - not_null
+
+  - name: fct_hospitalizacion
+    description: "Tabla de hechos de hospitalizaciones. Cada fila representa una hospitalización de una mascota."
+    columns:
+      - name: id_hospitalizacion
+        data_tests:
+          - unique
+          - not_null
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_historial_clinico')
+                field: id_consulta
+      - name: id_mascota
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_mascota')
+                field: id_mascota
+      - name: id_fecha_ingreso
+        description: "FK a dim_tiempo con la fecha de ingreso"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tiempo')
+                field: id_fecha
+      - name: id_fecha_alta
+        description: "FK a dim_tiempo con la fecha de alta"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tiempo')
+                field: id_fecha
+      - name: dias_hospitalizado
+        description: "Número de días entre fecha de ingreso y fecha de alta"
+        data_tests:
+          - not_null
+
+  - name: fct_vacuna
+    description: "Tabla de hechos sin métricas que registra qué vacunas se administraron en cada consulta."
+    columns:
+      - name: id_fct_vacuna
+        description: "Surrogate key generada con la combinación de id_consulta e id_vacuna"
+        data_tests:
+          - unique
+          - not_null
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_historial_clinico')
+                field: id_consulta
+      - name: id_vacuna
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_vacuna')
+                field: id_vacuna
+
+  - name: fct_medicamento
+    description: "Tabla de hechos sin métricas que registra qué medicamentos se prescribieron en cada consulta."
+    columns:
+      - name: id_fct_medicamento
+        description: "Surrogate key generada con la combinación de id_consulta e id_medicamento"
+        data_tests:
+          - unique
+          - not_null
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_historial_clinico')
+                field: id_consulta
+      - name: id_medicamento
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_medicamento')
+                field: id_medicamento
+      - name: id_mascota
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_mascota')
+                field: id_mascota
+      - name: id_empleado
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_empleado')
+                field: id_empleado
+      - name: id_centro
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_centro')
+                field: id_centro
+      - name: id_fecha
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tiempo')
+                field: id_fecha
+
+  - name: fct_prueba
+    description: "Tabla de hechos que registra qué pruebas diagnósticas se realizaron en cada consulta."
+    columns:
+      - name: id_fct_prueba
+        description: "Surrogate key generada con la combinación de id_consulta e id_prueba"
+        data_tests:
+          - unique
+          - not_null
+      - name: id_consulta
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_historial_clinico')
+                field: id_consulta
+      - name: id_prueba
+        data_tests:
+          - not_null
+      - name: id_mascota
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_mascota')
+                field: id_mascota
+      - name: id_empleado
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_empleado')
+                field: id_empleado
+      - name: id_centro
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_centro')
+                field: id_centro
+      - name: id_fecha_consulta
+        description: "FK a dim_tiempo con la fecha de la consulta"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tiempo')
+                field: id_fecha
+      - name: id_fecha_prueba
+        description: "FK a dim_tiempo con la fecha en que se obtuvo el resultado de la prueba"
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_tiempo')
+                field: id_fecha
+      - name: resultado
+
+  - name: fct_paciente_nuevo
+    description: "Tabla de hechos que registra la primera visita de cada mascota en cada centro veterinario."
+    columns:
+      - name: id_fct_paciente_nuevo
+        description: "Surrogate key generada con la combinación de id_mascota e id_centro"
+        data_tests:
+          - unique
+          - not_null
+      - name: id_mascota
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_mascota')
+                field: id_mascota
+      - name: id_centro
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_centro')
+                field: id_centro
+      - name: id_fecha
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tiempo')
+                field: id_fecha
+      - name: id_raza
+        data_tests:
+          - not_null
+      - name: es_nuevo
+        description: "Siempre true. Todos los registros representan la primera visita de una mascota en un centro."
+        data_tests:
+          - not_null
+      - name: volvio
+        description: "True si el paciente volvió al mismo centro tras su primera visita, False si no regresó"
+        data_tests:
+          - not_null

@@ -38,12 +38,32 @@ models:
       - name: dni
         data_tests:
           - not_null
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
       - name: fecha_nacimiento
       - name: edad
         description: datediff de fecha nacimiento y fecha actual
       - name: telefono
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
       - name: email
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
       - name: direccion
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
       - name: codigo_postal
       - name: provincia
       - name: comunidad_autonoma
@@ -173,12 +193,22 @@ models:
       - name: primer_apellido
       - name: segundo_apellido
       - name: dni
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
         data_tests:
           - not_null
       - name: fecha_alta
         data_tests:
           - not_null
       - name: salario
+        config:
+          tags:
+            - pii
+          meta:
+            pii: true
       - name: id_puesto
         data_tests:
           - not_null
