@@ -1,19 +1,19 @@
+{{ config(
+    materialized='table'
+) }}
+
 with
-
-source as (
-    select * from {{ source('raw_clinicas', 'duenos') }}
-),
-
-cleaned as (
-    select distinct
-        {{ generate_surrogate_key(['ciudad','pais']) }}  AS id_ciudad,  --la realizamos con ciudad y pais por si algun dueño es de otro pais
-        {{ clean_string('ciudad') }}              AS ciudad,
-        {{ clean_string('provincia') }}           AS provincia,
-        {{ clean_string('comunidad_autonoma') }}  AS comunidad_autonoma,
-        {{ clean_string('pais') }}                AS pais,   
-        TRIM(codigo_postal)              AS codigo_postal
-
-    from source
-)
+    source as (
+        select * from {{ source('bronze_clinicas', 'duenos') }}
+    ),
+    cleaned as (
+        select distinct
+            {{ generate_surrogate_key(['ciudad', 'pais']) }}  as id_ciudad,
+            {{ clean_string('ciudad') }}             as ciudad,
+            {{ clean_string('provincia') }}          as provincia,
+            {{ clean_string('comunidad_autonoma') }} as comunidad_autonoma,
+            {{ clean_string('pais') }}               as pais
+        from source
+    )
 
 select * from cleaned

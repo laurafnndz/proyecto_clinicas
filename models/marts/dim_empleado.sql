@@ -15,8 +15,8 @@ select
     e.dbt_valid_from,
     e.dbt_valid_to,
     case when e.dbt_valid_to is null 
-         then true else false end    as es_actual --cuando valid_to not null: actual es true
-                                                    --cuando es null: actual es false
+         then true else false end    as es_actual   -- cuando valid_to is null: es_actual = true  (registro vigente, sin fecha de cierre)
+                                                    -- cuando valid_to is not null: es_actual = false (registro histórico, ya cerrado)
 from {{ ref('snp_empleado') }} e
 left join {{ ref('stg__puesto') }} p
     on e.id_puesto = p.id_puesto
