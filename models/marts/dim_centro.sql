@@ -10,5 +10,5 @@ select
     u.ciudad,
     u.provincia
 from {{ ref('stg__centro') }} c
-left join {{ ref('ciudad_slv') }} u
+left join {{ ref('stg__ciudad') }} u
     on c.id_ciudad = u.id_ciudad
