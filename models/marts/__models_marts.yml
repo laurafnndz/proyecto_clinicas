@@ -115,6 +115,14 @@ models:
               arguments:
                 to: ref('dim_ubicacion')
                 field: id_ciudad
+      - name: ciudad
+        description: "Ciudad del centro veterinario, desnormalizado desde dim_ubicacion"
+        data_tests:
+          - not_null
+      - name: provincia
+        description: "Provincia del centro veterinario, desnormalizado desde dim_ubicacion"
+        data_tests:
+          - not_null
 
   - name: dim_empleado
     description: "Dimensión de empleados con historial SCD2. Cada fila representa una versión del empleado en un periodo de tiempo."
@@ -208,6 +216,14 @@ models:
         description: "Fecha hasta la que esta versión es válida. NULL si es la versión actual"
       - name: es_actual
         description: "True si es la versión vigente de la mascota, False si es histórica"
+        data_tests:
+          - not_null
+      - name: raza
+        description: "Nombre de la raza de la mascota, desnormalizado desde raza_slv"
+        data_tests:
+          - not_null
+      - name: especie
+        description: "Especie de la mascota, desnormalizado desde raza_slv"
         data_tests:
           - not_null
 
@@ -436,6 +452,16 @@ models:
         description: "Número de días entre fecha de ingreso y fecha de alta"
         data_tests:
           - not_null
+      - name: es_reingreso
+        description: "True si la mascota ya habia sido hospitalizada anteriormente"
+        data_tests:
+          - not_null
+      - name: num_hospitalizaciones_previas
+        description: "Numero de hospitalizaciones anteriores de la mascota"
+        data_tests:
+          - not_null
+      - name: dias_desde_ultimo_ingreso
+        description: "Dias entre el alta anterior y este nuevo ingreso. Null si es la primera hospitalizacion"
 
   - name: fct_vacuna
     description: "Tabla de hechos sin métricas que registra qué vacunas se administraron en cada consulta."
