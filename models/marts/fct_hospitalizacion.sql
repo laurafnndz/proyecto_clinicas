@@ -1,16 +1,13 @@
 {{ config(materialized='table') }}
 
-SELECT
+select
     -- FKs naturales
     h.id_hospitalizacion,
     h.id_consulta,
-
     -- FKs a dimensiones
     h.id_mascota,
-    CAST(h.fecha_ingreso AS DATE)                              AS id_fecha_ingreso,
-    CAST(h.fecha_alta AS DATE)                                 AS id_fecha_alta,
-
+    cast(h.fecha_ingreso as date)                             as id_fecha_ingreso,
+    cast(h.fecha_alta as date)                                as id_fecha_alta,
     -- Métricas
-    DATEDIFF('day', h.fecha_ingreso, h.fecha_alta)             AS dias_hospitalizado
-
-FROM {{ ref('slv__hospitalizacion') }} h
+    datediff('day', h.fecha_ingreso, h.fecha_alta)            as dias_hospitalizado
+from {{ ref('stg__hospitalizacion') }} h
