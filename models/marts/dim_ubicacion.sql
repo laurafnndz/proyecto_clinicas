@@ -4,7 +4,6 @@
 select
     id_ciudad,
     ciudad,
-    codigo_postal,
     provincia,
     comunidad_autonoma,
     pais

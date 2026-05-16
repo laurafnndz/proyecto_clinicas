@@ -1,6 +1,11 @@
+{{ config(
+    materialized='incremental',
+    unique_key='id_consulta'
+) }}
+
 with
 source as (
-    select * from {{ source('raw_clinicas', 'consultas') }}
+    select * from {{ source('bronze_clinicas', 'consultas') }}
 ),
 empleados as (
     select * from {{ ref('stg__empleado') }}
@@ -15,13 +20,12 @@ duenos as (
 ),
 renamed as (
     select
-        {{ generate_surrogate_key(['s.id_consulta', 's.nombre_mascota', 's.dni_dueno']) }}  AS id_consulta,                               
+        {{ generate_surrogate_key(['s.id_consulta', 's.nombre_mascota', 's.dni_dueno']) }} as id_consulta,
         m.id_mascota,
-        {{ generate_surrogate_key(['s.motivo_consulta']) }}                   AS id_motivo,
-        e.id_empleado                                                         AS id_empleado,
-        {{ generate_surrogate_key(['s.nombre_centro']) }}                     AS id_centro,
-        {{ cast_date('s.fecha_consulta') }}                                   AS fecha_consulta,
-        s._fivetran_synced                                                    AS updated_at
+        {{ generate_surrogate_key(['s.motivo_consulta']) }}                                as id_motivo,
+        e.id_empleado                                                                      as id_empleado,
+        {{ generate_surrogate_key(['s.nombre_centro']) }}                                  as id_centro,
+        {{ cast_date('s.fecha_consulta') }}                                                as fecha_consulta
     from source s
     left join empleados e
         on s.numero_colegiado = e.numero_colegiado
@@ -33,3 +37,7 @@ renamed as (
 )
 
 select * from renamed
+
+{% if is_incremental() %}
+where fecha_consulta > (select max(fecha_consulta) from {{ this }})
+{% endif %}

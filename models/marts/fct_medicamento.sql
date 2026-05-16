@@ -3,25 +3,22 @@
     unique_key=['id_consulta', 'id_medicamento']
 ) }}
 
-SELECT
+select
     -- SK propia
-    {{ generate_surrogate_key(['cm.id_consulta', 'cm.id_medicamento']) }} AS id_fct_medicamento,
-
+    {{ generate_surrogate_key(['cm.id_consulta', 'cm.id_medicamento']) }} as id_fct_medicamento,
     -- FKs naturales
     cm.id_consulta,
     cm.id_medicamento,
-
     -- FKs a dimensiones (heredadas de la consulta)
     c.id_mascota,
     c.id_empleado,
     c.id_centro,
     c.id_motivo,
-    CAST(c.fecha_consulta AS DATE)    AS id_fecha
-
-FROM {{ ref('slv__consulta_medicamento') }} cm
-LEFT JOIN {{ ref('slv__consulta') }} c
-    ON cm.id_consulta = c.id_consulta
+    cast(c.fecha_consulta as date)    as id_fecha
+from {{ ref('stg__consulta_medicamento') }} cm
+left join {{ ref('stg__consulta') }} c
+    on cm.id_consulta = c.id_consulta
 
 {% if is_incremental() %}
-WHERE cm.id_consulta NOT IN (SELECT id_consulta FROM {{ this }})
+where cm.id_consulta not in (select id_consulta from {{ this }})
 {% endif %}
