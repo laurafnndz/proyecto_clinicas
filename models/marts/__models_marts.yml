@@ -135,6 +135,8 @@ models:
       - name: id_empleado
         data_tests:
           - not_null
+      - name: fecha_alta
+      
       - name: nombre
         data_tests:
           - not_null
