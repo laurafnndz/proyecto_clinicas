@@ -4,6 +4,7 @@
 select
     e.dbt_scd_id              as id_version,
     e.id_empleado,
+    e.fecha_alta,
     e.nombre,
     e.primer_apellido,
     e.segundo_apellido,
