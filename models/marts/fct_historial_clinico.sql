@@ -1,5 +1,4 @@
 {{ config(materialized='table') }}
-
 select
     -- FKs naturales
     c.id_consulta,
