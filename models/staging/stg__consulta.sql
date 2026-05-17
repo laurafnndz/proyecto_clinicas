@@ -2,7 +2,6 @@
     materialized='incremental',
     unique_key='id_consulta'
 ) }}
-
 with
 source as (
     select * from {{ source('bronze_clinicas', 'consultas') }}
@@ -35,9 +34,7 @@ renamed as (
         on {{ clean_string('s.nombre_mascota') }} = m.nombre_mascota
         and d.id_dueno = m.id_dueno
 )
-
 select * from renamed
-
 {% if is_incremental() %}
 where fecha_consulta > (select max(fecha_consulta) from {{ this }})
 {% endif %}
