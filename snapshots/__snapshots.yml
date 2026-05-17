@@ -1,11 +1,11 @@
 version: 2
 snapshots:
-  - name: snp_dueno #SCD3
+  - name: snp_dueno
     description: >
       Snapshot de dueños de mascotas que trackea cambios en datos de contacto
-      mediante estrategia timestamp, comparando los campos telefono, email, 
-      codigo_postal, provincia, comunidad_autonoma y pais para detectar cambios.
-      Sirve como fuente histórica para construir el SCD3 en la capa Gold (dim_dueno). 
+      mediante estrategia check, comparando los campos telefono, email, 
+      codigo_postal e id_ciudad para detectar cambios reales.
+      Sirve como fuente histórica para construir el SCD3 en la capa Gold (dim_dueno).
     columns:
       - name: id_dueno
         description: "Surrogate key del dueño, clave única del snapshot"
@@ -23,8 +23,6 @@ snapshots:
         description: "País del dueño"
       - name: id_ciudad
         description: "FK hacia stg__ciudad"
-      - name: updated_at
-        description: "Timestamp de la última sincronización de Fivetran, usado para detectar cambios"
       - name: dbt_scd_id
         description: "ID único generado por dbt para cada versión del registro"
       - name: dbt_updated_at
@@ -34,22 +32,23 @@ snapshots:
       - name: dbt_valid_to
         description: "Fecha hasta la que el registro es válido. NULL si es el registro activo"
 
-  - name: snp_empleado #SCD2
+  - name: snp_empleado
     description: >
-      Snapshot de empleados que trackea cambios históricos en todos sus datos.
-      Implementa SCD2 mediante estrategia timestamp usando el campo updated_at
-      generado por Fivetran en la ingesta.
+      Snapshot de empleados que trackea cambios históricos mediante estrategia check,
+      comparando los campos salario, id_centro y nombre_puesto para detectar cambios reales.
+      Realiza un JOIN interno con stg__puesto para traer la descripción y evitar desnormalizar Silver.
+      Implementa SCD2 en la capa Gold (dim_empleado).
     columns:
       - name: id_empleado
         description: "ID del empleado, clave única del snapshot"
       - name: id_puesto
-        description: "FK hacia stg__puesto"
+        description: "FK hacia stg__puesto original del empleado"
+      - name: nombre_puesto
+        description: "Nombre descriptivo del puesto (traído desde stg__puesto para mantener la trazabilidad del texto histórico)"
       - name: salario
         description: "Salario del empleado"
       - name: id_centro
         description: "FK hacia stg__centro"
-      - name: updated_at
-        description: "Timestamp de la última sincronización de Fivetran, usado para detectar cambios"
       - name: dbt_scd_id
         description: "ID único generado por dbt para cada versión del registro"
       - name: dbt_updated_at
@@ -59,13 +58,11 @@ snapshots:
       - name: dbt_valid_to
         description: "Fecha hasta la que el registro es válido. NULL si es el registro activo"
 
-
-
-  - name: snp_mascota #SCD2
+  - name: snp_mascota
     description: >
       Snapshot de mascotas que trackea cambios históricos en todos sus datos.
       Implementa SCD2 mediante estrategia timestamp usando el campo updated_at
-      generado por Fivetran en la ingesta desde la tabla consultas.
+      que corresponde a la fecha de la consulta más reciente.
     columns:
       - name: id_mascota
         description: "Surrogate key de la mascota, clave única del snapshot"
@@ -80,7 +77,7 @@ snapshots:
       - name: id_raza
         description: "FK hacia stg__raza"
       - name: updated_at
-        description: "Timestamp de la última sincronización de Fivetran, usado para detectar cambios"
+        description: "Fecha de la consulta más reciente, usado para detectar cambios en el snapshot SCD2"
       - name: dbt_scd_id
         description: "ID único generado por dbt para cada versión del registro"
       - name: dbt_updated_at
