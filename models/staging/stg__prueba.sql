@@ -1,7 +1,6 @@
 {{ config(
-    materialized='table'
+    materialized='view'
 ) }}
-
 with
 source as (
     select * from {{ source('bronze_clinicas', 'consultas') }}
