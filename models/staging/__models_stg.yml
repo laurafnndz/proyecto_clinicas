@@ -15,9 +15,6 @@ models:
       - name: pais
         data_tests:
           - not_null
-      - name: codigo_postal
-        data_tests:
-          - not_null
 
   - name: stg__dueno
     description: >
@@ -77,8 +74,7 @@ models:
               arguments:
                 to: ref('stg__ciudad')
                 field: id_ciudad
-      - name: updated_at
-        description: "Timestamp de la última sincronización de Fivetran"
+      
 
   - name: stg__especie
     description: "Catálogo de especies de animales"
@@ -105,7 +101,7 @@ models:
           - not_null
           - relationships:
               arguments:
-                to: ref('stg__especie') # FK referencia a stg__especie
+                to: ref('stg__especie')
                 field: id_especie
 
   - name: stg__puesto
@@ -122,7 +118,8 @@ models:
   - name: stg__mascota
     description: >
       Staging de mascotas. El número de chip es NO PROCEDE para pájaros sin chip
-      y SIN DATO para el resto de animales sin chip.
+      y SIN DATO para el resto de animales sin chip. El campo updated_at corresponde
+      a la fecha de la consulta más reciente, usado para el snapshot SCD2.
     columns:
       - name: id_mascota
         data_tests:
@@ -133,7 +130,7 @@ models:
           - not_null
           - relationships:
               arguments:
-                to: ref('stg__dueno') # FK de stg__dueno
+                to: ref('stg__dueno')
                 field: id_dueno
       - name: nombre_mascota
         data_tests:
@@ -146,14 +143,14 @@ models:
           - not_null
           - relationships:
               arguments:
-                to: ref('stg__raza') # FK stg__raza
+                to: ref('stg__raza')
                 field: id_raza
-      - name: peso_gr
+      - name: peso_mascota
+        description: "Peso de la mascota en gramos en la consulta más reciente"
       - name: fecha_nacimiento
-      - name: edad
       - name: esterilizado
       - name: updated_at
-        description: "Timestamp de la última sincronización de Fivetran"
+        description: "Fecha de la consulta más reciente, usado como control para el snapshot SCD2"
 
   - name: stg__centro
     description: "Staging de centros veterinarios con surrogate key de ciudad"
@@ -173,7 +170,7 @@ models:
           - not_null
           - relationships:
               arguments:
-                to: ref('stg__ciudad') # FK hacia stg__ciudad
+                to: ref('stg__ciudad')
                 field: id_ciudad
       - name: direccion_centro
         description: "Dirección del centro veterinario"
@@ -214,7 +211,7 @@ models:
           - not_null
           - relationships:
               arguments:
-                to: ref('stg__puesto') # FK de stg__puesto
+                to: ref('stg__puesto')
                 field: id_puesto
       - name: numero_colegiado
       - name: id_centro
@@ -222,10 +219,9 @@ models:
           - not_null
           - relationships:
               arguments:
-                to: ref('stg__centro') # FK de stg__centro
+                to: ref('stg__centro')
                 field: id_centro
-      - name: _fivetran_synced
-        description: "Timestamp de la última sincronización de Fivetran, usado para el snapshot SCD2 (timestamp)"
+      
 
   - name: stg__motivo_consulta
     description: "Catálogo de motivos de consulta"
@@ -442,16 +438,20 @@ models:
           - not_null
 
 
-#UNIT TEST 1: CON CASE WHEN
 unit_tests:
+
+#UNIT TEST 1: CON CASE WEHN
   - name: test_numero_colegiado_no_veterinario
+    model: stg__empleado
+    overrides:
+      macros:
+        is_incremental: false
     description: >
       Verifica que el campo numero_colegiado devuelve NO PROCEDE
       para empleados que no son veterinarios, y el número de colegiado real
       para los que sí lo son (VETERINARIO).
-    model: stg__empleado
     given:
-      - input: source('raw_clinicas', 'empleados')
+      - input: source('bronze_clinicas', 'empleados')
         rows:
           - {id_empleado: 1, nombre_completo: 'Juan Garcia Lopez', dni: '12345678A', puesto: 'ADMINISTRATIVO', numero_colegiado: 'GR001', fecha_alta: '01/01/2020', salario: 2000, nombre_centro: 'Clinica Veterinaria Genil'}
           - {id_empleado: 2, nombre_completo: 'Ana Martinez Ruiz', dni: '87654321B', puesto: 'VETERINARIO', numero_colegiado: 'GR002', fecha_alta: '01/01/2020', salario: 3000, nombre_centro: 'Clinica Veterinaria Genil'}
@@ -464,19 +464,19 @@ unit_tests:
         - {numero_colegiado: 'NO PROCEDE'}
         - {numero_colegiado: 'GR002'}
 
-#UNIT TEST 2 CON CASE WHEN
-     
+
+#UNIT TEST 2: CON CASE WHEN
   - name: test_numero_chip_pajaro
+    model: stg__mascota
     description: >
       Verifica que el campo numero_chip devuelve NO PROCEDE para pájaros
       sin chip y SIN DATO para el resto de animales sin chip.
-    model: stg__mascota
     given:
-      - input: source('raw_clinicas', 'consultas')
+      - input: source('bronze_clinicas', 'consultas')
         rows:
-          - {nombre_mascota: 'loro', especie: 'pájaro', numero_chip: null, dni_dueno: '12345678A', raza: 'loro gris', fecha_nacimiento: '01/01/2020', esterilizado: 'no aplica', _fivetran_synced: '2024-01-01'}
-          - {nombre_mascota: 'rex', especie: 'perro', numero_chip: null, dni_dueno: '87654321B', raza: 'beagle', fecha_nacimiento: '01/01/2019', esterilizado: 'si', _fivetran_synced: '2024-01-01'}
-          - {nombre_mascota: 'misi', especie: 'gato', numero_chip: '980633924987635', dni_dueno: '11111111C', raza: 'europeo comun', fecha_nacimiento: '01/01/2018', esterilizado: 'no', _fivetran_synced: '2024-01-01'}
+          - {nombre_mascota: 'loro', especie: 'pájaro', numero_chip: null, dni_dueno: '12345678A', raza: 'loro gris', fecha_nacimiento: '01/01/2020', esterilizado: 'no aplica', fecha_consulta: '01/01/2024'}
+          - {nombre_mascota: 'rex', especie: 'perro', numero_chip: null, dni_dueno: '87654321B', raza: 'beagle', fecha_nacimiento: '01/01/2019', esterilizado: 'si', fecha_consulta: '01/01/2024'}
+          - {nombre_mascota: 'misi', especie: 'gato', numero_chip: '980633924987635', dni_dueno: '11111111C', raza: 'europeo comun', fecha_nacimiento: '01/01/2018', esterilizado: 'no', fecha_consulta: '01/01/2024'}
       - input: ref('stg__dueno')
         rows:
           - {id_dueno: 'abc123', dni: '12345678A'}
@@ -488,16 +488,18 @@ unit_tests:
         - {numero_chip: 'SIN DATO'}
         - {numero_chip: '980633924987635'}
 
-        
-#UNIT TEST 3 CON JOIN
 
+#UNIT TEST 3: CON JOIN
   - name: test_id_ciudad_centro
+    model: stg__centro
+    overrides:
+      macros:
+        is_incremental: false
     description: >
       Verifica que el join con stg__ciudad resuelve correctamente
       el id_ciudad para cada centro veterinario.
-    model: stg__centro
     given:
-      - input: source('raw_clinicas', 'consultas')
+      - input: source('bronze_clinicas', 'consultas')
         rows:
           - {nombre_centro: 'CLINICA VETERINARIA GENIL', direccion_centro: 'calle recogidas 8', cp_centro: '18005', telefono_centro: '958345678', ciudad_centro: 'Granada'}
       - input: ref('stg__ciudad')

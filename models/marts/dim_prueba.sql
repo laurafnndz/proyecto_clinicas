@@ -3,4 +3,4 @@
 SELECT
     id_prueba,
     nombre_prueba
-FROM {{ ref('slv__prueba') }}
+FROM {{ ref('stg__prueba') }}

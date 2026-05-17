@@ -1,11 +1,14 @@
-
 {{ config(materialized='table') }}
 
 select
-    id_centro,
-    nombre_centro,
-    direccion_centro,
-    cp_centro,
-    telefono_centro,
-    id_ciudad
-from {{ ref('stg__centro') }}
+    c.id_centro,
+    c.nombre_centro,
+    c.direccion_centro,
+    c.cp_centro,
+    c.telefono_centro,
+    c.id_ciudad,
+    u.ciudad,
+    u.provincia
+from {{ ref('stg__centro') }} c
+left join {{ ref('stg__ciudad') }} u
+    on c.id_ciudad = u.id_ciudad

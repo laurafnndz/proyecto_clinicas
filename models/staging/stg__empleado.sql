@@ -1,30 +1,32 @@
-with 
+{{ config(
+    materialized='view'
+) }}
+
+with
 source as (
-    select * from {{ source('raw_clinicas', 'empleados') }}
+    select * from {{ source('bronze_clinicas', 'empleados') }}
 ),
 puestos as (
     select * from {{ ref('stg__puesto') }}
 ),
 renamed as (
     select
-        {{ generate_surrogate_key(['id_empleado', 'dni']) }}               AS id_empleado,                                    
+        {{ generate_surrogate_key(['id_empleado', 'dni']) }}            as id_empleado,
         {{ separar_nombre('nombre_completo') }}
-        {{ clean_string('dni') }}                                          AS dni,
-        {{ cast_date('fecha_alta') }}                                      AS fecha_alta,
-        CAST(salario AS NUMERIC(10,2))                                     AS salario,
-
+        {{ clean_string('dni') }}                                       as dni,
+        {{ cast_date('fecha_alta') }}                                   as fecha_alta,
+        cast(salario as numeric(10,2))                                  as salario,
         p.id_puesto,
-
-
-        CASE 
-            WHEN p.puesto = 'VETERINARIO' THEN {{ clean_string('numero_colegiado') }}
-            ELSE 'NO PROCEDE'
-        END                                                                   AS numero_colegiado,
-        {{ generate_surrogate_key(['nombre_centro']) }}                    AS id_centro,
-        _fivetran_synced                                                      AS updated_at
+        case
+            when p.puesto = 'VETERINARIO' then {{ clean_string('numero_colegiado') }}
+            else 'NO PROCEDE'
+        end                                                             as numero_colegiado,
+        {{ generate_surrogate_key(['nombre_centro']) }}                 as id_centro,
+        
     from source cv
     left join puestos p
-        on UPPER(cv.puesto) = p.puesto
+        on upper(cv.puesto) = p.puesto
 )
+
 select * from renamed
 

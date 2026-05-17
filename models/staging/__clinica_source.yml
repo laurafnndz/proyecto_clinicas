@@ -1,9 +1,9 @@
 version: 2
 sources:
-  - name: raw_clinicas
+  - name: bronze_clinicas
     description: Tablas de schema raw en db bronze
     database: dev_clinicas_bronze
-    schema: raw_clinicas
+    schema: bronze_clinicas
     config:
       enabled: true
       tags:

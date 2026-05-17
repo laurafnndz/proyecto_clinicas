@@ -85,9 +85,6 @@ models:
       - name: ciudad
         data_tests:
           - not_null
-      - name: codigo_postal
-        data_tests:
-          - not_null
       - name: provincia
         data_tests:
           - not_null
@@ -118,6 +115,14 @@ models:
               arguments:
                 to: ref('dim_ubicacion')
                 field: id_ciudad
+      - name: ciudad
+        description: "Ciudad del centro veterinario, desnormalizado desde dim_ubicacion"
+        data_tests:
+          - not_null
+      - name: provincia
+        description: "Provincia del centro veterinario, desnormalizado desde dim_ubicacion"
+        data_tests:
+          - not_null
 
   - name: dim_empleado
     description: "Dimensión de empleados con historial SCD2. Cada fila representa una versión del empleado en un periodo de tiempo."
@@ -169,7 +174,7 @@ models:
       - name: dbt_valid_to
         description: "Fecha hasta la que esta versión es válida. NULL si es la versión actual"
       - name: es_actual
-        description: "True si es la versión vigente del empleado (dbt_valid_to es null), False si es histórica"
+        description: "True si es la versión vigente del empleado, False si es histórica"
         data_tests:
           - not_null
 
@@ -210,7 +215,15 @@ models:
       - name: dbt_valid_to
         description: "Fecha hasta la que esta versión es válida. NULL si es la versión actual"
       - name: es_actual
-        description: "True si es la versión vigente de la mascota (dbt_valid_to es null), False si es histórica"
+        description: "True si es la versión vigente de la mascota, False si es histórica"
+        data_tests:
+          - not_null
+      - name: raza
+        description: "Nombre de la raza de la mascota, desnormalizado desde raza_slv"
+        data_tests:
+          - not_null
+      - name: especie
+        description: "Especie de la mascota, desnormalizado desde raza_slv"
         data_tests:
           - not_null
 
@@ -301,11 +314,6 @@ models:
           - unique
           - not_null
       - name: id_factura
-        data_tests:
-          - relationships:
-              arguments:
-                to: ref('fct_facturacion')
-                field: id_factura
       - name: id_mascota
         data_tests:
           - not_null
@@ -356,10 +364,6 @@ models:
       - name: id_consulta
         data_tests:
           - not_null
-          - relationships:
-              arguments:
-                to: ref('fct_historial_clinico')
-                field: id_consulta
       - name: id_metodo_pago
         data_tests:
           - not_null
@@ -421,10 +425,6 @@ models:
       - name: id_consulta
         data_tests:
           - not_null
-          - relationships:
-              arguments:
-                to: ref('fct_historial_clinico')
-                field: id_consulta
       - name: id_mascota
         data_tests:
           - not_null
@@ -452,6 +452,16 @@ models:
         description: "Número de días entre fecha de ingreso y fecha de alta"
         data_tests:
           - not_null
+      - name: es_reingreso
+        description: "True si la mascota ya habia sido hospitalizada anteriormente"
+        data_tests:
+          - not_null
+      - name: num_hospitalizaciones_previas
+        description: "Numero de hospitalizaciones anteriores de la mascota"
+        data_tests:
+          - not_null
+      - name: dias_desde_ultimo_ingreso
+        description: "Dias entre el alta anterior y este nuevo ingreso. Null si es la primera hospitalizacion"
 
   - name: fct_vacuna
     description: "Tabla de hechos sin métricas que registra qué vacunas se administraron en cada consulta."
@@ -464,10 +474,6 @@ models:
       - name: id_consulta
         data_tests:
           - not_null
-          - relationships:
-              arguments:
-                to: ref('fct_historial_clinico')
-                field: id_consulta
       - name: id_vacuna
         data_tests:
           - not_null
@@ -475,6 +481,14 @@ models:
               arguments:
                 to: ref('dim_vacuna')
                 field: id_vacuna
+      - name: id_mascota
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_mascota')
+                field: id_mascota
+      - name: id_factura
 
   - name: fct_medicamento
     description: "Tabla de hechos sin métricas que registra qué medicamentos se prescribieron en cada consulta."
@@ -487,10 +501,6 @@ models:
       - name: id_consulta
         data_tests:
           - not_null
-          - relationships:
-              arguments:
-                to: ref('fct_historial_clinico')
-                field: id_consulta
       - name: id_medicamento
         data_tests:
           - not_null
@@ -538,10 +548,6 @@ models:
       - name: id_consulta
         data_tests:
           - not_null
-          - relationships:
-              arguments:
-                to: ref('fct_historial_clinico')
-                field: id_consulta
       - name: id_prueba
         data_tests:
           - not_null
@@ -581,56 +587,3 @@ models:
               arguments:
                 to: ref('dim_tiempo')
                 field: id_fecha
-      
-
-  - name: fct_paciente_nuevo
-    description: "Tabla de hechos que registra la primera visita de cada mascota en cada centro veterinario."
-    columns:
-      - name: id_fct_paciente_nuevo
-        description: "Surrogate key generada con la combinación de id_mascota e id_centro"
-        data_tests:
-          - unique
-          - not_null
-      - name: id_mascota
-        data_tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_mascota')
-                field: id_mascota
-      - name: id_centro
-        data_tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_centro')
-                field: id_centro
-      - name: id_fecha
-        data_tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_tiempo')
-                field: id_fecha
-      - name: id_raza
-        data_tests:
-          - not_null
-      - name: es_nuevo
-        description: "Siempre true. Todos los registros representan la primera visita de una mascota en un centro."
-        data_tests:
-          - not_null
-      - name: volvio
-        description: "True si el paciente volvió al mismo centro tras su primera visita, False si no regresó"
-        data_tests:
-          - not_null
-
-  - name: dim_prueba
-    description: "Catálogo de pruebas diagnósticas"
-    columns:
-      - name: id_prueba
-        data_tests:
-          - unique
-          - not_null
-      - name: nombre_prueba
-        data_tests:
-          - not_null

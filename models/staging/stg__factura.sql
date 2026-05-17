@@ -1,15 +1,24 @@
+{{ config(
+    materialized='incremental',
+    unique_key='id_factura'
+) }}
+
 with
 source as (
-    select * from {{ source('raw_clinicas', 'consultas') }}
+    select * from {{ source('bronze_clinicas', 'consultas') }}
 ),
 renamed as (
     select
-        {{ generate_surrogate_key(['id_factura', 'id_consulta']) }}                          AS id_factura,
-        {{ generate_surrogate_key(['id_consulta', 'nombre_mascota', 'dni_dueno']) }}         AS id_consulta,
-        {{ cast_date('fecha_emision') }}                            AS fecha_emision,
-        CAST(total AS NUMERIC(10,2))                                AS total,
-        {{ generate_surrogate_key(['metodo_pago']) }}               AS id_metodo_pago,
-        _fivetran_synced                                            AS updated_at
+        {{ generate_surrogate_key(['id_factura', 'id_consulta']) }}                  as id_factura,
+        {{ generate_surrogate_key(['id_consulta', 'nombre_mascota', 'dni_dueno']) }} as id_consulta,
+        {{ cast_date('fecha_emision') }}                                             as fecha_emision,
+        cast(total as numeric(10,2))                                                 as total,
+        {{ generate_surrogate_key(['metodo_pago']) }}                                as id_metodo_pago
     from source
 )
+
 select * from renamed
+
+{% if is_incremental() %}
+where fecha_emision > (select max(fecha_emision) from {{ this }})
+{% endif %}
