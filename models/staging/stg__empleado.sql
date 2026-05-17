@@ -1,6 +1,5 @@
 {{ config(
-    materialized='incremental',
-    unique_key='id_empleado'
+    materialized='view'
 ) }}
 
 with
