@@ -23,7 +23,7 @@ renamed as (
             else 'NO PROCEDE'
         end                                                             as numero_colegiado,
         {{ generate_surrogate_key(['nombre_centro']) }}                 as id_centro,
-        _fivetran_synced                                                as updated_at
+        
     from source cv
     left join puestos p
         on upper(cv.puesto) = p.puesto
@@ -31,6 +31,3 @@ renamed as (
 
 select * from renamed
 
-{% if is_incremental() %}
-where updated_at > (select max(updated_at) from {{ this }})
-{% endif %}

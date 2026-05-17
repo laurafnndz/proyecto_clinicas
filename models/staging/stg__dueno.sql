@@ -21,13 +21,10 @@ cleaned as (
         {{ handle_null(clean_string('provincia')) }}                           as provincia,
         {{ handle_null(clean_string('comunidad_autonoma')) }}                  as comunidad_autonoma,
         {{ handle_null(clean_string('pais')) }}                                as pais,
-        {{ generate_surrogate_key(['ciudad', 'pais']) }}                       as id_ciudad,
-        _fivetran_synced                                                       as updated_at
+        {{ generate_surrogate_key(['ciudad', 'pais']) }}                       as id_ciudad
+        
     from source
 )
 
 select * from cleaned
 
-{% if is_incremental() %}
-where updated_at > (select max(updated_at) from {{ this }})
-{% endif %}
