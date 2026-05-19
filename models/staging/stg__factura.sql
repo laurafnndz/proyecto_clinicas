@@ -20,5 +20,5 @@ renamed as (
 select * from renamed
 
 {% if is_incremental() %}
-where fecha_emision > (select max(fecha_emision) from {{ this }})
+where fecha_emision >= (select max(fecha_emision) from {{ this }})
 {% endif %}
