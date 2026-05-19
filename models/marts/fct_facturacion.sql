@@ -1,4 +1,7 @@
-{{ config(materialized='table') }}
+{{ config(
+    materialized='incremental',
+    unique_key='id_factura'
+) }}
 
 select
     -- FKs naturales
@@ -32,3 +35,7 @@ left join (
     from {{ ref('stg__consulta_prueba') }}
     group by id_consulta
 ) pru on f.id_consulta = pru.id_consulta
+
+{% if is_incremental() %}
+    where cast(f.fecha_emision as date) > (select max(id_fecha) from {{ this }})
+{% endif %}
