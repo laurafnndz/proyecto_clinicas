@@ -1,5 +1,4 @@
 {{ config(materialized='table') }}
-
 select
     -- FKs naturales
     h.id_hospitalizacion,
@@ -7,9 +6,12 @@ select
     -- FKs a dimensiones
     h.id_mascota,
     cast(h.fecha_ingreso as date)                              as id_fecha_ingreso,
-    cast(h.fecha_alta as date)                                 as id_fecha_alta,
+    case
+        when h.fecha_alta is not null then cast(h.fecha_alta as date)
+        else null
+    end                                                        as id_fecha_alta,
     -- Métricas
-    datediff('day', h.fecha_ingreso, h.fecha_alta)             as dias_hospitalizado,
+    datediff('day', h.fecha_ingreso, coalesce(h.fecha_alta, current_date)) as dias_hospitalizado,
     -- Para detectar reingresos
     count(*) over (
         partition by h.id_mascota
@@ -32,5 +34,4 @@ select
         ),
         h.fecha_ingreso
     )                                                          as dias_desde_ultimo_ingreso
-
 from {{ ref('stg__hospitalizacion') }} h
