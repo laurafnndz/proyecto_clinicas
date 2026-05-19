@@ -2,7 +2,6 @@
     materialized='incremental',
     unique_key='id_consulta'
 ) }}
-
 select
     -- FKs naturales
     c.id_consulta,
@@ -32,7 +31,7 @@ select
         else 'PESO NORMAL'
     end                                                   as estado_peso
 from {{ ref('stg__consulta') }} c
-left join {{ ref('stg__factura') }} f
+inner join {{ ref('stg__factura') }} f
     on c.id_consulta = f.id_consulta
 left join {{ ref('stg__hospitalizacion') }} h
     on c.id_consulta = h.id_consulta
@@ -48,7 +47,6 @@ left join {{ ref('rango_peso_raza') }} s
         when datediff('year',  m.fecha_nacimiento, current_date()) < 8  then 'Adulto'
         else 'Senior'
     end = s.etapa_vital
-
 {% if is_incremental() %}
     where cast(c.fecha_consulta as date) > (select max(id_fecha) from {{ this }})
 {% endif %}
