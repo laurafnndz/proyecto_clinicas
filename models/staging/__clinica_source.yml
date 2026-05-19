@@ -2,7 +2,7 @@ version: 2
 sources:
   - name: bronze_clinicas
     description: Tablas de schema raw en db bronze
-    database: dev_clinicas_bronze
+    database: "{{ env_var('DBT_DATABASE_BRONZE', 'dev_clinicas_bronze') }}" 
     schema: bronze_clinicas
     config:
       enabled: true
