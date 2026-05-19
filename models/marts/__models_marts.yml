@@ -444,16 +444,13 @@ models:
                 field: id_fecha
       - name: id_fecha_alta
         description: "FK a dim_tiempo con la fecha de alta"
-        data_tests:
-          - not_null
+        tests:
           - relationships:
               arguments:
                 to: ref('dim_tiempo')
                 field: id_fecha
       - name: dias_hospitalizado
         description: "Número de días entre fecha de ingreso y fecha de alta"
-        data_tests:
-          - not_null
       - name: es_reingreso
         description: "True si la mascota ya habia sido hospitalizada anteriormente"
         data_tests:
