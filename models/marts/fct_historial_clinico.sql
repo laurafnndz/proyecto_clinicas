@@ -1,4 +1,8 @@
-{{ config(materialized='table') }}
+{{ config(
+    materialized='incremental',
+    unique_key='id_consulta'
+) }}
+
 select
     -- FKs naturales
     c.id_consulta,
@@ -44,3 +48,7 @@ left join {{ ref('rango_peso_raza') }} s
         when datediff('year',  m.fecha_nacimiento, current_date()) < 8  then 'Adulto'
         else 'Senior'
     end = s.etapa_vital
+
+{% if is_incremental() %}
+    where cast(c.fecha_consulta as date) > (select max(id_fecha) from {{ this }})
+{% endif %}

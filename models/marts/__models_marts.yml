@@ -309,7 +309,7 @@ models:
           - not_null
 
   - name: fct_historial_clinico
-    description: "Tabla de hechos central. Cada fila representa una consulta veterinaria."
+    description: "Tabla de hechos central. Cada fila representa una consulta veterinaria. Materializada como incremental — solo procesa consultas nuevas en cada run."
     columns:
       - name: id_consulta
         data_tests:
@@ -357,7 +357,7 @@ models:
           - not_null
 
   - name: fct_facturacion
-    description: "Tabla de hechos de facturación. Cada fila representa una factura emitida tras una consulta veterinaria."
+    description: "Tabla de hechos de facturación. Cada fila representa una factura emitida tras una consulta veterinaria. Materializada como incremental — solo procesa facturas nuevas en cada run."
     columns:
       - name: id_factura
         data_tests:
