@@ -473,7 +473,7 @@ unit_tests:
     given:
       - input: source('bronze_clinicas', 'consultas')
         rows:
-          - {nombre_mascota: 'loro', especie: 'pájaro', numero_chip: null, dni_dueno: '12345678A', raza: 'loro gris', fecha_nacimiento: '01/01/2020', esterilizado: 'no aplica', fecha_consulta: '01/01/2024'}
+          - {nombre_mascota: 'loro', especie: 'pajaro', numero_chip: null, dni_dueno: '12345678A', raza: 'loro gris', fecha_nacimiento: '01/01/2020', esterilizado: 'no aplica', fecha_consulta: '01/01/2024'}
           - {nombre_mascota: 'rex', especie: 'perro', numero_chip: null, dni_dueno: '87654321B', raza: 'beagle', fecha_nacimiento: '01/01/2019', esterilizado: 'si', fecha_consulta: '01/01/2024'}
           - {nombre_mascota: 'misi', especie: 'gato', numero_chip: '980633924987635', dni_dueno: '11111111C', raza: 'europeo comun', fecha_nacimiento: '01/01/2018', esterilizado: 'no', fecha_consulta: '01/01/2024'}
       - input: ref('stg__dueno')

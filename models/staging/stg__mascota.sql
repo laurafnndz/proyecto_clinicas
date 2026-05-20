@@ -33,7 +33,7 @@ renamed as (
         {{ generate_surrogate_key(['raza', 'especie']) }}                            as id_raza,
         {{ clean_string('m.nombre_mascota') }}                                      as nombre_mascota,
         case
-            when {{ clean_string('m.especie') }} = 'PÁJARO' and m.numero_chip is null
+            when {{ clean_string('m.especie') }} = 'PAJARO' and m.numero_chip is null
                 then 'NO PROCEDE'
             when m.numero_chip is null
                 then 'SIN DATO'
