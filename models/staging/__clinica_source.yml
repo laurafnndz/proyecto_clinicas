@@ -35,8 +35,8 @@ sources:
                       - conejo
                       - gato
                       - perro
-                      - pájaro
-                      - hurón
+                      - pajaro
+                      - huron
           - name: numero_chip
           - name: raza
           - name: peso_gr
